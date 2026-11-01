@@ -18,7 +18,7 @@ Now you can make your changes to the file
 
 # 2. Creating you Commit
 
-Once your done making some changes use the git add comand to add the changes files, git add . adds everything but this isnt always the best pracitce, espicaly if there are multiple files with changes on them, instead its advised to do git add [filename], and then writre a 
+Once your done making some changes use the git add comand to add the changes files, if you are unsure what has changed git stauts will show you all files with untracked changes. If you want to add all untracked changes do git add . but, this isnt always the best pracitce, espicaly if there are multiple files with changes on them, instead its advised to do git add [local or absolute path], and then writre a commit for each file
 
 # 3. Pushing your Commit and What to do Before hand
 
