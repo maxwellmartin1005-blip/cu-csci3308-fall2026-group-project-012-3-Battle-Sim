@@ -55,6 +55,15 @@ app.get('/characterSelect', (req,res) => {
   res.render('characterSelect');
 });
 
+app.get('/createFighter', (req, res) => {
+  res.render('pages/createFighter');
+});
+
+app.post('/createFighter', (req, res) => {
+  //save the fighter once the database is set up
+  res.redirect('/characterSelect');
+});
+
 app.get('/battle', (req, res) => {
   res.render('battle')
 });
