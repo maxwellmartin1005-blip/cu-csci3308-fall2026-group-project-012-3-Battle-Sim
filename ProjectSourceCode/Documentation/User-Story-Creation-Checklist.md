@@ -112,7 +112,7 @@ When you are ready to start a story, you can move it into the In Progress sectio
 Once your pull request has been approved and merged into main, you may close the issue by moving it into the "Done" section. This will close your issue. DO NOT close an issue unless you are sure that issue/story is complete, as the process to reopen that story/issue is not listed here. Changing the status/moving the story/issue will not reopen it.  
 
 
- DO NOT delete the issue. The only circumstances you should ever delete an issue are: duplicate issues have been created, the team has decided the story/issue is not in line with the requirements for this project even as a stretch goal, or it is a tempory/accidnetialy created issue.
+ DO NOT delete the issue. The only circumstances you should ever delete an issue are: duplicate issues have been created, the team has decided the story/issue is not in line with the requirements for this project even as a stretch goal, or it is a temporary/accidentally created issue.
 
 Congratulations, you have now completed your story
 
