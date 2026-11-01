@@ -1,0 +1,28 @@
+<form action="/createFighter" method="POST" enctype="multipart/form-data"
+      style="display:flex;flex-direction:column;align-items:center;">
+    <h1>Create Fighter</h1>
+
+    <div style="margin:0.5rem;padding:0.5rem;">
+        <label for="fighterName" style="display:block;">Fighter Name</label>
+        <input type="text" id="fighterName" name="fighterName" required>
+    </div>
+
+    <div style="margin:0.5rem;padding:0.5rem;">
+        <label for="fighterImage" style="display:block;">Fighter Image</label>
+        <input type="file" id="fighterImage" name="fighterImage" accept="image/*" required>
+        <img id="imagePreview" alt="Image preview"
+             style="display:none;max-width:150px;margin-top:0.5rem;">
+    </div>
+
+    <fieldset style="margin:0.5rem;padding:0.5rem;">
+        <legend>Choose Moves</legend>
+        <label><input type="checkbox" name="moves" value="quickHit"> Quick Hit</label><br>
+        <label><input type="checkbox" name="moves" value="heavyHit"> Heavy Hit</label><br>
+        <label><input type="checkbox" name="moves" value="guard"> Guard</label>
+    </fieldset>
+
+    <div>
+        <button type="submit">Save Fighter</button>
+        <a href="/characterSelect">Cancel</a>
+    </div>
+</form>
