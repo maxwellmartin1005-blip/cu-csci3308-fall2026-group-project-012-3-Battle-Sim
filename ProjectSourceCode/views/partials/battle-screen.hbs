@@ -1,0 +1,129 @@
+{{!--
+AI assistance: OpenAI Codex, November 1, 2026.
+User prompt: "alright lets do that for now"
+Context: implement issue #30 as an independent Handlebars partial: static fighter
+panels first, then placeholder move controls; defer page integration until PR #26 merges.
+Significant response: generated the markup and scoped CSS for the two fighter
+panels, accessible image placeholders, static health meters, and responsive layout.
+Validation: render and browser checks are performed locally; Andre must review
+the code and confirm its behavior before submitting it as coursework.
+--}}
+
+<style>
+    .battle-screen {
+        box-sizing: border-box;
+        width: 100%;
+        max-width: 960px;
+        margin: 0 auto;
+        padding: 24px 16px;
+        color: #1f2937;
+        font-family: system-ui, sans-serif;
+    }
+
+    .battle-screen *,
+    .battle-screen *::before,
+    .battle-screen *::after {
+        box-sizing: border-box;
+    }
+
+    .battle-screen__heading {
+        margin: 0 0 8px;
+    }
+
+    .battle-screen__note {
+        margin: 0 0 24px;
+        color: #4b5563;
+    }
+
+    .battle-screen__fighters {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 24px;
+    }
+
+    .battle-screen__fighter {
+        min-width: 0;
+        padding: 20px;
+        border: 1px solid #cbd5e1;
+        border-radius: 8px;
+        background: #fff;
+    }
+
+    .battle-screen__fighter h3 {
+        margin: 4px 0 16px;
+    }
+
+    .battle-screen__role {
+        margin: 0;
+        color: #4b5563;
+    }
+
+    .battle-screen__portrait {
+        display: grid;
+        place-items: center;
+        width: 100%;
+        max-width: 180px;
+        aspect-ratio: 1;
+        margin: 0 auto 20px;
+        padding: 12px;
+        border: 2px dashed #94a3b8;
+        background: #f1f5f9;
+        text-align: center;
+    }
+
+    .battle-screen__health-label {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-between;
+        gap: 8px;
+        margin-bottom: 8px;
+    }
+
+    .battle-screen__health {
+        width: 100%;
+        height: 24px;
+    }
+
+    @media (max-width: 600px) {
+        .battle-screen__fighters {
+            grid-template-columns: 1fr;
+        }
+    }
+</style>
+
+<section class="battle-screen" aria-labelledby="battle-screen-title">
+    <h2 class="battle-screen__heading" id="battle-screen-title">Battle</h2>
+    <p class="battle-screen__note">Placeholder preview: sample fighters and health.</p>
+
+    <div class="battle-screen__fighters">
+        <article class="battle-screen__fighter" aria-labelledby="battle-fighter-a">
+            <p class="battle-screen__role">You</p>
+            <h3 id="battle-fighter-a">Fighter A</h3>
+            <div class="battle-screen__portrait" role="img" aria-label="Fighter A image placeholder">
+                Image placeholder
+            </div>
+            <label class="battle-screen__health-label" for="battle-health-a">
+                <span>Health</span>
+                <span>75 / 100 HP</span>
+            </label>
+            <meter class="battle-screen__health" id="battle-health-a" min="0" max="100" value="75">
+                75 out of 100 health points
+            </meter>
+        </article>
+
+        <article class="battle-screen__fighter" aria-labelledby="battle-fighter-b">
+            <p class="battle-screen__role">Opponent</p>
+            <h3 id="battle-fighter-b">Fighter B</h3>
+            <div class="battle-screen__portrait" role="img" aria-label="Fighter B image placeholder">
+                Image placeholder
+            </div>
+            <label class="battle-screen__health-label" for="battle-health-b">
+                <span>Health</span>
+                <span>60 / 100 HP</span>
+            </label>
+            <meter class="battle-screen__health" id="battle-health-b" min="0" max="100" value="60">
+                60 out of 100 health points
+            </meter>
+        </article>
+    </div>
+</section>
