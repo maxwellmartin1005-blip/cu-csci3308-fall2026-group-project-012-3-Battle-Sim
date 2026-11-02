@@ -1,0 +1,16 @@
+<form action="/login" method="POST" style="display:flex;flex-direction:column;align-items:center;">
+    <div style="margin:0.5rem;padding:0.5rem;">
+        <label for="username" style="display:block;">Username</label>
+        <input type="text" name="username" style="display:block;" required>
+    </div>
+
+    <div style="margin:0.5rem;padding:0.5rem;">
+        <label for="password" style="display:block;">Password</label>
+        <input type="text" name="password" style="display:block;">
+    </div>
+
+    <button>Login</button>
+    <p>Dont have an account? <a href="/register">Register</a></p>
+
+    <p id="error_message" style="color:red;"></p>
+</form>

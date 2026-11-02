@@ -20,9 +20,8 @@ const axios = require('axios'); // To make HTTP requests from our server. We'll 
 // create `ExpressHandlebars` instance and configure the layouts and partials dir.
 const hbs = handlebars.create({
   extname: 'hbs',
-  layoutsDir: __dirname + '/components',
-  partialsDir: __dirname + '/components/partials',
-  defaultLayout: false,
+  layoutsDir: __dirname + '/views/layouts',
+  partialsDir: __dirname + '/views/partials',
 });
 
 // *****************************************************
@@ -30,6 +29,7 @@ const hbs = handlebars.create({
 // *****************************************************
 
 // Register `hbs` as our view engine using its bound `engine()` function.
+app.use(express.static(path.join(__dirname)));
 app.engine('hbs', hbs.engine);
 app.set('view engine', 'hbs');
 app.set('views', path.join(__dirname, 'views'));
@@ -43,20 +43,32 @@ app.get('/', (req, res) => {
   res.redirect('/login'); //this will call the /login route in the API
 });
 
+app.get('/register', (req, res) => {
+  res.render('pages/register')
+});
+
+app.post('/register', (req, res) => {
+  // TODO: Add registration functionality here
+  
+  res.redirect('/login');
+});
+
 app.get('/login', (req, res) => {
-  res.render('login')
+  res.render('pages/login')
 });
 
 app.post('/login', (req, res) => {
+  // TODO: Add login verification here
+
   res.redirect('/characterSelect');
 });
 
 app.get('/characterSelect', (req,res) => {
-  res.render('characterSelect');
+  res.render('pages/characterSelect');
 });
 
 app.get('/battle', (req, res) => {
-  res.render('battle')
+  res.render('pages/battle')
 });
 
 // Listen on port 3000
