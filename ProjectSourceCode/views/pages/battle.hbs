@@ -1,12 +1,27 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-</head>
-<body>
-    <h1>Battle here</h1>
-    <a href="/login">Exit Battle</a>
-</body>
-</html>
+{{!--
+AI assistance: OpenAI Codex, November 2, 2026.
+User prompt: "ok aiden pr is merged now"
+Significant response: integrated the existing battle-screen partial into the
+merged shared layout, retained Exit battle navigation, and allowed this page
+to scroll so stacked fighter panels remain reachable on small screens.
+Validation: local HTTP and template-render checks; Andre's review is required
+before coursework submission.
+--}}
+
+<style>
+    /* The shared layout disables scrolling; allow it on the battle page only. */
+    body:has(.battle-page) {
+        overflow: auto !important;
+    }
+
+    .battle-page__exit {
+        max-width: 960px;
+        margin: 0 auto;
+        padding: 0 16px 24px;
+    }
+</style>
+
+<main class="battle-page">
+    {{> battle-screen }}
+    <p class="battle-page__exit"><a href="/login">Exit battle</a></p>
+</main>
