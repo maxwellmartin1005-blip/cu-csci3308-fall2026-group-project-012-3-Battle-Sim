@@ -30,7 +30,7 @@
         <p>Guard - Reduce next hit</p>
     </div>
 
-    <a href="/battle"><button class="bottom-right-element">Battle</button></a>
+    <a href="/battle"><button id="battle-btn">Battle</button></a>
 </div>
 
 <script>
@@ -45,6 +45,9 @@
 
             // Show only the clicked div's text
             textDivs[index].classList.add('visible');
+
+            const battleBtn = document.getElementById('battle-btn');
+            battleBtn.style.display = 'block';
         });
     });
 </script>
