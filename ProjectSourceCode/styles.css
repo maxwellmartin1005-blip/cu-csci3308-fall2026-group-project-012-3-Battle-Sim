@@ -1,0 +1,59 @@
+.character-select-body {
+    display: flex;
+    width: 100%;
+    flex-direction: column;
+}
+
+.row-container {
+    display: flex;
+    justify-content: space-around;
+    width: 100%;
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+}
+
+.column-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+}
+
+#battle-btn {
+    right: 1rem;
+    bottom: 1rem;
+    width: 5rem;
+    position: fixed;
+    display: none;
+}
+
+.fighter-card {
+    padding: 15px;
+    width: 200px;
+    text-align: center;
+    cursor: pointer;
+    border-radius: 5px;
+    margin-bottom: 5px;
+    user-select: none;
+}
+
+.fighter-card img {
+  width: 100%;
+  object-fit: cover; /* fills container, crops if needed */
+}
+
+.hidden-text {
+    display: none;
+    color: green;
+    margin-top: 5px;
+    padding: 10px;
+    background-color: #ecf0f1;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+.visible {
+    display: block;
+}
