@@ -4,7 +4,8 @@ User prompt: "alright lets do that for now"
 Context: implement issue #30 as an independent Handlebars partial: static fighter
 panels first, then placeholder move controls; defer page integration until PR #26 merges.
 Significant response: generated the markup and scoped CSS for the two fighter
-panels, accessible image placeholders, static health meters, and responsive layout.
+panels, accessible image placeholders, static health meters, responsive layout,
+and disabled sample move buttons. No combat logic or page integration was generated.
 Validation: render and browser checks are performed locally; Andre must review
 the code and confirm its behavior before submitting it as coursework.
 --}}
@@ -84,8 +85,41 @@ the code and confirm its behavior before submitting it as coursework.
         height: 24px;
     }
 
+    .battle-screen__moves {
+        min-width: 0;
+        margin: 24px 0 0;
+        padding: 0;
+        border: 0;
+    }
+
+    .battle-screen__moves legend {
+        margin-bottom: 8px;
+        padding: 0;
+        font-size: 18px;
+        font-weight: 700;
+    }
+
+    .battle-screen__move-buttons {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 12px;
+    }
+
+    .battle-screen__move {
+        min-height: 48px;
+        padding: 12px;
+        border: 1px solid #94a3b8;
+        border-radius: 6px;
+        background: #e2e8f0;
+        color: #475569;
+        font: inherit;
+        opacity: 1;
+        cursor: not-allowed;
+    }
+
     @media (max-width: 600px) {
-        .battle-screen__fighters {
+        .battle-screen__fighters,
+        .battle-screen__move-buttons {
             grid-template-columns: 1fr;
         }
     }
@@ -126,4 +160,16 @@ the code and confirm its behavior before submitting it as coursework.
             </meter>
         </article>
     </div>
+
+    <fieldset class="battle-screen__moves" disabled aria-describedby="battle-moves-note">
+        <legend>Sample moves</legend>
+        <p class="battle-screen__note" id="battle-moves-note">
+            Preview only: these move buttons do not start a turn.
+        </p>
+        <div class="battle-screen__move-buttons">
+            <button class="battle-screen__move" type="button">Quick hit</button>
+            <button class="battle-screen__move" type="button">Heavy hit</button>
+            <button class="battle-screen__move" type="button">Guard</button>
+        </div>
+    </fieldset>
 </section>
