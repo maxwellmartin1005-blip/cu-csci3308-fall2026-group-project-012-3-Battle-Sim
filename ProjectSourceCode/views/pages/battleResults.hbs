@@ -1,0 +1,19 @@
+<style>
+    /* Allow this page to scroll when the shared layout clips shorter screens. */
+    body:has(.battle-results) {
+        overflow: auto !important;
+    }
+</style>
+
+<main class="battle-results container py-4 text-center" style="max-width:560px;">
+    <p class="text-muted">Sample result</p>
+    <h2 class="mb-4">You win!</h2>
+
+    <div class="border bg-light mx-auto mb-4 d-flex align-items-center justify-content-center"
+         style="width:150px;height:150px;" role="img" aria-label="{{winner}} image placeholder">
+        Image placeholder
+    </div>
+
+    <p class="lead"><strong>{{winner}}</strong> wins.</p>
+    <p>{{loser}} was defeated.</p>
+</main>

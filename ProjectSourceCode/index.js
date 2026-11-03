@@ -67,6 +67,12 @@ app.get('/characterSelect', (req,res) => {
   res.render('pages/characterSelect');
 });
 
+app.get('/battleResults', (req, res) => {
+  res.render('pages/battleResults', {
+    winner: 'Fighter A',
+    loser: 'Fighter B',
+  });
+});
 app.get('/battle', (req, res) => {
   res.render('pages/battle')
 });
