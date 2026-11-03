@@ -43,3 +43,17 @@ CREATE TABLE IF NOT EXISTS moves_to_fighters(
     FOREIGN KEY (move_id) REFERENCES moves(id),
     FOREIGN KEY (fighter_id) REFERENCES fighters(id)
 );
+
+-- Fights table
+CREATE TABLE IF NOT EXISTS fights(
+    id SERIAL PRIMARY KEY,
+    player1_id INT NOT NULL,
+    player2_id INT NOT NULL,
+    current_player_id INT DEFAULT NULL,
+    player1_health INT DEFAULT 0 NOT NULL,
+    player2_health INT DEFAULT 0 NOT NULL,
+    finished BOOLEAN DEFAULT FALSE NOT NULL,
+    FOREIGN KEY (user1_id) REFERENCES users(id),
+    FOREIGN KEY (user2_id) REFERENCES users(id),
+    FOREIGN KEY (current_player_id) REFERENCES users(id)
+);
