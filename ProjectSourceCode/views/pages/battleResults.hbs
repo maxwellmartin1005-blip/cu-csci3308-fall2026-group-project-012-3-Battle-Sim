@@ -1,22 +1,15 @@
-<style>
-    /* Allow this page to scroll when the shared layout clips shorter screens. */
-    body:has(.battle-results) {
-        overflow: auto !important;
-    }
-</style>
-
-<main class="battle-results column-container" style="padding:0.5rem;">
+<main class="battle-results column-container">
     <p class="text-muted">Sample result</p>
     <h2 class="mb-3">{{#if isVictory}}You win!{{else}}You lose{{/if}}</h2>
 
-    <div class="mx-auto mb-3 d-flex align-items-center justify-content-center"
-         style="width:150px;height:150px;border:1px solid #ccc;" role="img" aria-label="{{winner}} image placeholder">
+    <div class="battle-results__portrait mx-auto mb-3 d-flex align-items-center justify-content-center"
+         role="img" aria-label="{{winner}} image placeholder">
         Image placeholder
     </div>
 
     <p><strong>{{winner}}</strong> wins.</p>
     <p>{{loser}} was defeated.</p>
-    <form action="/characterSelect" method="GET" style="margin:0.5rem;">
+    <form class="battle-results__actions" action="/characterSelect" method="GET">
         <button type="submit">Choose fighter</button>
     </form>
 </main>
