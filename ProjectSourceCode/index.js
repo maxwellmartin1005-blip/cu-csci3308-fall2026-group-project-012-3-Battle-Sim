@@ -68,9 +68,12 @@ app.get('/characterSelect', (req,res) => {
 });
 
 app.get('/battleResults', (req, res) => {
+  // Sample outcomes for the UI preview until battle results are available.
+  const isVictory = req.query.outcome !== 'defeat';
   res.render('pages/battleResults', {
-    winner: 'Fighter A',
-    loser: 'Fighter B',
+    isVictory,
+    winner: isVictory ? 'Fighter A' : 'Fighter B',
+    loser: isVictory ? 'Fighter B' : 'Fighter A',
   });
 });
 app.get('/battle', (req, res) => {
