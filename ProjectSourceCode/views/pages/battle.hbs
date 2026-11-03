@@ -1,13 +1,3 @@
-{{!--
-AI assistance: OpenAI Codex, November 2, 2026.
-User prompt: "ok aiden pr is merged now"
-Significant response: integrated the existing battle-screen partial into the
-merged shared layout, retained Exit battle navigation, and allowed this page
-to scroll so stacked fighter panels remain reachable on small screens.
-Validation: local HTTP and template-render checks; Andre's review is required
-before coursework submission.
---}}
-
 <style>
     /* The shared layout disables scrolling; allow it on the battle page only. */
     body:has(.battle-page) {
