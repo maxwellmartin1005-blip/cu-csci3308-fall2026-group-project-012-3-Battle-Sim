@@ -25,6 +25,24 @@ body {
     margin-bottom: 1rem;
 }
 
+body:has(.battle-results) {
+    overflow: auto;
+}
+
+.battle-results {
+    padding: 0.5rem;
+}
+
+.battle-results__portrait {
+    width: 9.375rem;
+    height: 9.375rem;
+    border: 0.0625rem solid #ccc;
+}
+
+.battle-results__actions {
+    margin: 0.5rem;
+}
+
 #battle-btn {
     right: 1rem;
     bottom: 1rem;
@@ -60,22 +78,4 @@ body {
 
 .visible {
     display: block;
-}
-
-body:has(.battle-results) {
-    overflow: auto;
-}
-
-.battle-results {
-    padding: 0.5rem;
-}
-
-.battle-results__portrait {
-    width: 9.375rem;
-    height: 9.375rem;
-    border: 0.0625rem solid #ccc;
-}
-
-.battle-results__actions {
-    margin: 0.5rem;
 }
