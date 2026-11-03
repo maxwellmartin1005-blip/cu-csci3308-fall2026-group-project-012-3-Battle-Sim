@@ -1,7 +1,7 @@
 -- Users table
 CREATE TABLE IF NOT EXISTS users(
     id SERIAL PRIMARY KEY,
-    username VARCHAR(255) NOT NULL,
+    username VARCHAR(255) NOT NULL UNIQUE,
     password_hash VARCHAR(255) NOT NULL,
     wins INT DEFAULT 0 NOT NULL,
     losses INT DEFAULT 0 NOT NULL
@@ -30,9 +30,9 @@ CREATE TABLE IF NOT EXISTS moves(
 CREATE TABLE IF NOT EXISTS users_to_fighters(
     user_id INT NOT NULL,
     fighter_id INT NOT NULL,
-    PRIMARY KEY (user_id, fighter_id)
+    PRIMARY KEY (user_id, fighter_id),
     FOREIGN KEY (user_id) REFERENCES users(id),
-    FOREIGN KEY (fighter_id) REFERENCES fighters(id),
+    FOREIGN KEY (fighter_id) REFERENCES fighters(id)
 );
 
 -- Moves_to_fighters table
@@ -53,7 +53,7 @@ CREATE TABLE IF NOT EXISTS fights(
     player1_health INT DEFAULT 0 NOT NULL,
     player2_health INT DEFAULT 0 NOT NULL,
     finished BOOLEAN DEFAULT FALSE NOT NULL,
-    FOREIGN KEY (user1_id) REFERENCES users(id),
-    FOREIGN KEY (user2_id) REFERENCES users(id),
+    FOREIGN KEY (player1_id) REFERENCES users(id),
+    FOREIGN KEY (player2_id) REFERENCES users(id),
     FOREIGN KEY (current_player_id) REFERENCES users(id)
 );
