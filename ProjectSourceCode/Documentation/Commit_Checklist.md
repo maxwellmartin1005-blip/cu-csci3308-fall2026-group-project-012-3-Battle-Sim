@@ -4,19 +4,19 @@
 
 ## 1.1 Identifying Story and Branch
  
- Before you start work or a commit, you should have a User Story and a Branch. To find a user story go into the project board and either take one that is assinged to you, or one in todo that is not assinged to anybody(do not do this untill after Wensday Nov 4th, as the assignment  requires us to make and do our own stoires for this first week), and move it into the In-progess setction (see Please see [User-Story-Creation-Checklist.md](./User-Story-Creation-Checklist.md) for more infomration on moving storyies), if you already have an issue/story in the In-Progress section you can use that instead. Open the Issue by clicking on it form the Project Board, on the right most side there should be a section called "Development", the "Relationships" section is above it. If a branch was linked or created during Story creation, you should see it there. If not, you can create one by clicking the blue link, or connect a preexisting one by clicking on the gear and searching for the branch.
+ Before you start work or a commit, you should have a User Story and a Branch. To find a user story go into the project board and either take one that is assinged to you, or one in todo that is not assinged to anybody(do not do this until after Wensday Nov 4th, as the assignment  requires us to make and do our own stoires for this first week), and move it into the In-progess setction (see Please see [User-Story-Creation-Checklist.md](./User-Story-Creation-Checklist.md) for more infomration on moving storyies), if you already have an issue/story in the In-Progress section you can use that instead. Open the Issue by clicking on it form the Project Board, on the right most side there should be a section called "Development", the "Relationships" section is above it. If a branch was linked or created during Story creation, you should see it there. If not, you can create one by clicking the blue link, or connect a preexisting one by clicking on the gear and searching for the branch.
 
 ## 1.2
 Open up your IDE, and make sure all work unrelated to the commit is saved and pushed to the right branch
 
 
-Before contniuing make sure you are on the right branch, to check do, git status, the very first line will tell you which branch your on. If you're not on the right branch, use git checkout (branch name)
+Before continuing make sure you are on the right branch, to check do, git status, the very first line will tell you which branch your on. If you're not on the right branch, use git checkout (branch name)
 
-If the branch is not there checkout into main, git pull, checkout back into your branch.
+If the branch is not there do git pull origin main
 
 Once you have confirmed you are on the right branch, pull from it to make sure your IDE has the most recent version.
 
-Depending on the feature you are working on, you may want to merge in any recent changes from main. To do this, checkout into main, pull it, checkout back into your branch, and run git merge main
+Depending on the feature you are working on, you may want to merge in any recent changes from main. To do this, git pull origin main(you may need to do git merge aftwards more testing is requried.)
 
 If you run into a merge conflict after the last step, please see section 3.1.
 
