@@ -5,16 +5,18 @@
     }
 </style>
 
-<main class="battle-results container py-4 text-center" style="max-width:560px;">
+<main class="battle-results column-container" style="padding:0.5rem;">
     <p class="text-muted">Sample result</p>
-    <h2 class="mb-4">{{#if isVictory}}You win!{{else}}You lose{{/if}}</h2>
+    <h2 class="mb-3">{{#if isVictory}}You win!{{else}}You lose{{/if}}</h2>
 
-    <div class="border bg-light mx-auto mb-4 d-flex align-items-center justify-content-center"
-         style="width:150px;height:150px;" role="img" aria-label="{{winner}} image placeholder">
+    <div class="mx-auto mb-3 d-flex align-items-center justify-content-center"
+         style="width:150px;height:150px;border:1px solid #ccc;" role="img" aria-label="{{winner}} image placeholder">
         Image placeholder
     </div>
 
-    <p class="lead"><strong>{{winner}}</strong> wins.</p>
+    <p><strong>{{winner}}</strong> wins.</p>
     <p>{{loser}} was defeated.</p>
-    <a class="btn btn-primary mt-3" href="/characterSelect">Choose fighter</a>
+    <form action="/characterSelect" method="GET" style="margin:0.5rem;">
+        <button type="submit">Choose fighter</button>
+    </form>
 </main>
