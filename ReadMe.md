@@ -33,10 +33,6 @@ Will be updated as time goes on.
 | Express.js | Handles HTTP requests, routes, and communication between the interface and database. |
 | Handlebars | Generates dynamic HTML pages using templates. |
 | PostgreSQL | Stores user information and application data. |
-| Docker | Runs the application and its supporting services in containers. |
-| Docker Compose | Configures and runs the application and database together. |
-| Git | Tracks source code changes. |
-| GitHub | Hosts the repository and supports team collaboration and project management. |
 
 ## Prerequisites
 
@@ -66,7 +62,7 @@ git clone git@github.com:ZandadaPanda96/cu-csci3308-fall2026-group-project-012-3
 Navigate into the cloned repository:
 
 ```bash
-cd /cu-csci3308-fall2026-group-project-012-3-Battle-Sim
+cd cu-csci3308-fall2026-group-project-012-3-Battle-Sim
 ```
 
 ### Step 2: Navigate to the Source Code Directory
@@ -77,28 +73,11 @@ cd ProjectSourceCode
 
 ### Step 3: Configure Environment Variables
 
-Create the `.env` file described by the following:
-
-```env
-POSTGRES_USER=your_database_user
-POSTGRES_PASSWORD=your_database_password
-POSTGRES_DB=your_database_name
-POSTGRES_HOST=db
-POSTGRES_PORT=5432
-SESSION_SECRET=your_local_session_secret
-```
-
-Make sure the database credentials, session configuration, and other required settings match the application's configuration.
+TODO
 
 ### Step 4: Start the Application
 
-Build and start the application and database containers:
-
-```bash
-docker compose up --build
-```
-
-Wait for the services to initialize. The database must be available before the application can successfully communicate with it.
+run "npm start", Docker Compose: TODO
 
 ### Step 5: Access the Application
 
@@ -112,30 +91,11 @@ This address assumes the application maps port `3000` from the container to port
 
 ### Step 6: Stop the Application
 
-To stop the running containers, press `Ctrl+C` in the terminal and run:
-
-```bash
-docker compose down
-```
-
-This stops and removes the containers while normally preserving data stored in a named Docker volume.
-
-To remove the database volume as well, use the following command only when you intend to delete the locally persisted database data:
-
-```bash
-docker compose down -v
-```
+Docker Compose: TODO
 
 ### Troubleshooting
 
-- Verify that Docker is running.
-- Check that the `.env` file contains the required settings.
-- Make sure the configured ports are not already in use.
-- Check the container logs for errors:
-
-  ```bash
-  docker compose logs
-  ```
+Docker: TODO
 
 - Confirm that the database initialization scripts run successfully.
 
