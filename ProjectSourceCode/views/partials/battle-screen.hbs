@@ -1,71 +1,58 @@
 <style>
     .battle-screen {
-        box-sizing: border-box;
-        width: 100%;
-        max-width: 960px;
+        max-width: 760px;
         margin: 0 auto;
-        padding: 24px 16px;
-        color: #1f2937;
-        font-family: system-ui, sans-serif;
-    }
-
-    .battle-screen *,
-    .battle-screen *::before,
-    .battle-screen *::after {
-        box-sizing: border-box;
+        padding: 1rem;
     }
 
     .battle-screen__heading {
-        margin: 0 0 8px;
+        margin: 0.5rem 0 1rem;
+        text-align: center;
     }
 
     .battle-screen__note {
-        margin: 0 0 24px;
-        color: #4b5563;
+        margin: 0 0 1rem;
+        color: #6c757d;
+        text-align: center;
     }
 
     .battle-screen__fighters {
         display: grid;
         grid-template-columns: repeat(2, minmax(0, 1fr));
-        gap: 24px;
+        gap: 1rem;
     }
 
     .battle-screen__fighter {
-        min-width: 0;
-        padding: 20px;
-        border: 1px solid #cbd5e1;
-        border-radius: 8px;
-        background: #fff;
+        width: 100%;
+        max-width: 240px;
+        margin: 0 auto;
+        padding: 15px;
+        text-align: center;
     }
 
     .battle-screen__fighter h3 {
-        margin: 4px 0 16px;
+        margin: 0.5rem 0 1rem;
+        font-size: 1rem;
+        font-weight: normal;
     }
 
     .battle-screen__role {
         margin: 0;
-        color: #4b5563;
     }
 
     .battle-screen__portrait {
         display: grid;
         place-items: center;
-        width: 100%;
-        max-width: 180px;
-        aspect-ratio: 1;
-        margin: 0 auto 20px;
-        padding: 12px;
-        border: 2px dashed #94a3b8;
-        background: #f1f5f9;
-        text-align: center;
+        width: 150px;
+        height: 150px;
+        margin: 0 auto 1rem;
+        border: 1px solid #ccc;
     }
 
     .battle-screen__health-label {
         display: flex;
-        flex-wrap: wrap;
         justify-content: space-between;
-        gap: 8px;
-        margin-bottom: 8px;
+        margin-bottom: 0.5rem;
     }
 
     .battle-screen__health {
@@ -74,40 +61,25 @@
     }
 
     .battle-screen__moves {
-        min-width: 0;
-        margin: 24px 0 0;
+        margin: 1rem 0;
         padding: 0;
         border: 0;
     }
 
     .battle-screen__moves legend {
-        margin-bottom: 8px;
-        padding: 0;
-        font-size: 18px;
-        font-weight: 700;
+        font-size: 1rem;
+        text-align: center;
     }
 
     .battle-screen__move-buttons {
-        display: grid;
-        grid-template-columns: repeat(3, minmax(0, 1fr));
-        gap: 12px;
-    }
-
-    .battle-screen__move {
-        min-height: 48px;
-        padding: 12px;
-        border: 1px solid #94a3b8;
-        border-radius: 6px;
-        background: #e2e8f0;
-        color: #475569;
-        font: inherit;
-        opacity: 1;
-        cursor: not-allowed;
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 1rem;
     }
 
     @media (max-width: 600px) {
-        .battle-screen__fighters,
-        .battle-screen__move-buttons {
+        .battle-screen__fighters {
             grid-template-columns: 1fr;
         }
     }
@@ -155,9 +127,9 @@
             Preview only: these move buttons do not start a turn.
         </p>
         <div class="battle-screen__move-buttons">
-            <button class="battle-screen__move" type="button">Quick hit</button>
-            <button class="battle-screen__move" type="button">Heavy hit</button>
-            <button class="battle-screen__move" type="button">Guard</button>
+            <button type="button">Quick hit</button>
+            <button type="button">Heavy hit</button>
+            <button type="button">Guard</button>
         </div>
     </fieldset>
 </section>
