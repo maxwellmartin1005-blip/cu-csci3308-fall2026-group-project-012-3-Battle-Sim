@@ -1,0 +1,48 @@
+<section class="battle-screen" aria-labelledby="battle-screen-title">
+    <h2 class="battle-screen__heading" id="battle-screen-title">Battle</h2>
+    <p class="battle-screen__note">Placeholder preview: sample fighters and health.</p>
+
+    <div class="battle-screen__fighters">
+        <article class="battle-screen__fighter" aria-labelledby="battle-fighter-a">
+            <p class="battle-screen__role">You</p>
+            <h3 id="battle-fighter-a">Fighter A</h3>
+            <div class="battle-screen__portrait" role="img" aria-label="Fighter A image placeholder">
+                Image placeholder
+            </div>
+            <label class="battle-screen__health-label" for="battle-health-a">
+                <span>Health</span>
+                <span>75 / 100 HP</span>
+            </label>
+            <meter class="battle-screen__health" id="battle-health-a" min="0" max="100" value="75">
+                75 out of 100 health points
+            </meter>
+        </article>
+
+        <article class="battle-screen__fighter" aria-labelledby="battle-fighter-b">
+            <p class="battle-screen__role">Opponent</p>
+            <h3 id="battle-fighter-b">Fighter B</h3>
+            <div class="battle-screen__portrait" role="img" aria-label="Fighter B image placeholder">
+                Image placeholder
+            </div>
+            <label class="battle-screen__health-label" for="battle-health-b">
+                <span>Health</span>
+                <span>60 / 100 HP</span>
+            </label>
+            <meter class="battle-screen__health" id="battle-health-b" min="0" max="100" value="60">
+                60 out of 100 health points
+            </meter>
+        </article>
+    </div>
+
+    <fieldset class="battle-screen__moves" disabled aria-describedby="battle-moves-note">
+        <legend>Sample moves</legend>
+        <p class="battle-screen__note" id="battle-moves-note">
+            Preview only: these move buttons do not start a turn.
+        </p>
+        <div class="battle-screen__move-buttons">
+            <button type="button">Quick hit</button>
+            <button type="button">Heavy hit</button>
+            <button type="button">Guard</button>
+        </div>
+    </fieldset>
+</section>
