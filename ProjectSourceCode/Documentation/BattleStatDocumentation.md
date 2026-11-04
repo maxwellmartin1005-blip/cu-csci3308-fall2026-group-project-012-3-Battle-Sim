@@ -1,7 +1,7 @@
 # Battle Stat Documentation
 
 ## Purpose:
-Explain the battle mechanics of our game and how we want our turns system to work, alond with descriptions of all the other stats in the game.
+Explain the battle mechanics of our game and how we want our turns system to work, along with descriptions of all the other stats in the game.
 ## Stats:
 HP: Health Points, lose all of them and you lose.
 Attack: A modifier that helps determine how much damage a move does
