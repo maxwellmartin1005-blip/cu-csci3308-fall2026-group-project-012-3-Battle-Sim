@@ -1,3 +1,7 @@
+body {
+    overflow: hidden;
+}
+
 .character-select-body {
     display: flex;
     width: 100%;
@@ -19,6 +23,24 @@
     width: 100%;
     margin-top: 1rem;
     margin-bottom: 1rem;
+}
+
+body:has(.battle-results) {
+    overflow: auto;
+}
+
+.battle-results {
+    padding: 0.5rem;
+}
+
+.battle-results__portrait {
+    width: 9.375rem;
+    height: 9.375rem;
+    border: 0.0625rem solid #ccc;
+}
+
+.battle-results__actions {
+    margin: 0.5rem;
 }
 
 #battle-btn {
@@ -56,4 +78,100 @@
 
 .visible {
     display: block;
+}
+
+/* The shared layout disables scrolling; allow it on the battle page only. */
+body:has(.battle-page) {
+    overflow: auto;
+}
+
+.battle-page__exit {
+    max-width: 60rem;
+    margin: 0 auto;
+    padding: 0 1rem 1.5rem;
+}
+
+.battle-screen {
+    max-width: 47.5rem;
+    margin: 0 auto;
+    padding: 1rem;
+}
+
+.battle-screen__heading {
+    margin: 0.5rem 0 1rem;
+    text-align: center;
+}
+
+.battle-screen__note {
+    margin: 0 0 1rem;
+    color: #6c757d;
+    text-align: center;
+}
+
+.battle-screen__fighters {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1rem;
+}
+
+.battle-screen__fighter {
+    width: 100%;
+    max-width: 15rem;
+    margin: 0 auto;
+    padding: 0.9375rem;
+    text-align: center;
+}
+
+.battle-screen__fighter h3 {
+    margin: 0.5rem 0 1rem;
+    font-size: 1rem;
+    font-weight: normal;
+}
+
+.battle-screen__role {
+    margin: 0;
+}
+
+.battle-screen__portrait {
+    display: grid;
+    place-items: center;
+    width: 9.375rem;
+    height: 9.375rem;
+    margin: 0 auto 1rem;
+    border: 0.0625rem solid #ccc;
+}
+
+.battle-screen__health-label {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 0.5rem;
+}
+
+.battle-screen__health {
+    width: 100%;
+    height: 1.5rem;
+}
+
+.battle-screen__moves {
+    margin: 1rem 0;
+    padding: 0;
+    border: 0;
+}
+
+.battle-screen__moves legend {
+    font-size: 1rem;
+    text-align: center;
+}
+
+.battle-screen__move-buttons {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 1rem;
+}
+
+@media (max-width: 37.5rem) {
+    .battle-screen__fighters {
+        grid-template-columns: 1fr;
+    }
 }
