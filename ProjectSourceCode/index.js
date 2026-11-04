@@ -67,6 +67,16 @@ app.get('/characterSelect', (req,res) => {
   res.render('pages/characterSelect');
 });
 
+app.get('/battleResults', (req, res) => {
+  // Sample outcomes for the UI preview until battle results are available.
+  const outcome = req.query.outcome || 'victory';
+  const isVictory = outcome === 'victory';
+  res.render('pages/battleResults', {
+    isVictory,
+    winner: isVictory ? 'Fighter A' : 'Fighter B',
+    loser: isVictory ? 'Fighter B' : 'Fighter A',
+  });
+});
 app.get('/battle', (req, res) => {
   res.render('pages/battle')
 });
