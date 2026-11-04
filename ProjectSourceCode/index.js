@@ -67,6 +67,15 @@ app.get('/characterSelect', (req,res) => {
   res.render('pages/characterSelect');
 });
 
+app.get('/createFighter', (req, res) => {
+  res.render('pages/createFighter');
+});
+
+app.post('/createFighter', (req, res) => {
+  //save the fighter once the database is set up
+  res.redirect('/characterSelect');
+});
+
 app.get('/battleResults', (req, res) => {
   // Sample outcomes for the UI preview until battle results are available.
   const outcome = req.query.outcome || 'victory';
