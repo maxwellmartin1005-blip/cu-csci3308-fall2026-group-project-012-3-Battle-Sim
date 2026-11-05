@@ -16,7 +16,23 @@ const axios = require('axios'); // To make HTTP requests from our server. We'll 
 // *****************************************************
 // <!-- Section 2 : Connect to DB -->
 // *****************************************************
+const dbConfig = {
+  host: process.env.POSTGRES_HOST,
+  port: 5432,
+  database: process.env.POSTGRES_DB,
+  user: process.env.POSTGRES_USER,
+  password: process.env.POSTGRES_PASSWORD,
+};
+const db = pgp(dbConfig);
 
+db.connect()
+  .then(obj => {
+    console.log('Database connection successful');
+    obj.done();
+  })
+  .catch(error => {
+    console.log('ERROR:', error.message || error);
+  });
 // create `ExpressHandlebars` instance and configure the layouts and partials dir.
 const hbs = handlebars.create({
   extname: 'hbs',
@@ -34,6 +50,7 @@ app.engine('hbs', hbs.engine);
 app.set('view engine', 'hbs');
 app.set('views', path.join(__dirname, 'views'));
 app.use(bodyParser.json()); // specify the usage of JSON for parsing request body.
+app.use(bodyParser.urlencoded({ extended: true }));
 
 // *****************************************************
 // <!-- Section 4 : API Routes -->
@@ -47,10 +64,23 @@ app.get('/register', (req, res) => {
   res.render('pages/register')
 });
 
-app.post('/register', (req, res) => {
-  // TODO: Add registration functionality here
-  
-  res.redirect('/login');
+app.post('/register', async (req, res) => {
+const { username, email, password, confirmPassword } = req.body;
+  if (password !== confirmPassword) {
+    return res.render('pages/register', { message: 'Passwords do not match.' });
+  }
+
+  try {
+    const hash = await bcrypt.hash(password, 10);
+    await db.none(
+      'INSERT INTO users (username, email, password_hash) VALUES ($1, $2, $3)',
+      [username, email, hash]
+    );
+    res.redirect('/login');
+  } catch (err) {
+    console.log(err);
+    res.render('pages/register', { message: 'That username or email is already taken.' });
+  }
 });
 
 app.get('/login', (req, res) => {
