@@ -65,9 +65,7 @@ app.get('/register', (req, res) => {
 });
 
 app.post('/register', async (req, res) => {
-  const { username, email, password } = req.body;
-  const confirmPassword = req.body['confirm-password'];
-
+const { username, email, password, confirmPassword } = req.body;
   if (password !== confirmPassword) {
     return res.render('pages/register', { message: 'Passwords do not match.' });
   }
