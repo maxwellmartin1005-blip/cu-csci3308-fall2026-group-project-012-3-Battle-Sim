@@ -12,7 +12,7 @@ Battle Sim is a turn based battle simulator where you use the moves of the peopl
 
 ### Team Members
 
-| Name       | GitHub Username | Email 
+| Name | Email | GitHub Username |
 |------------|------------------------|---------------------|
 | Max Martin | Max.Martin-2@colorado.edu | maxwellmartin1005-blip |
 | Jamie Grove | Jamie.Grove@colorado.edu | jamiegrove76-pixel |
