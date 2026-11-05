@@ -30,6 +30,8 @@ SAgiAlter:How much a move alters your own agility
 Element: what is the elemental typing of this move
 
 ## Types of Moves:
+All moves should have an elemental typing
+
 Quick Attack = do less damage, take less time (QTime)
 Normal Attack = do normal damage, take normal time (NTime)
 Long Attack = do lots of damage, take long time (LTime)
@@ -38,6 +40,18 @@ Quick Alteration = do less alteration, take less time (QTime)
 Normal Alteration = do normal alteration, take normal time (NTime)
 Long Alteration = do lots of alteration, take long time (LTime)
 Burst Alteration (stretch goal) = Quick but temporary changes, take less time, but are temporary
+
+## Elemental Typing:
+### What elements exist:
+Fire: Weak to Water, Strong against Life
+Water: Weak to earth and Life, Strong against Earth and Fire
+Earth: Weak to Water and Life, Strong adainst Water
+Life: Weak to Fire and Dark, Strong against Water and Earth
+Light: Weak to Dark, But also Strong against Dark
+Dark: Weak to Life and Light, But strong against Light and Life
+### What elemental typings do:
+When a move of an elemental typing is being used against a fighter. You have to take into account the typing of the move and weather it is strong or weak against the typing of the fighter. If it's strong against them then the move gets a times 2 damage boost, if it's weak than the move damage gets halved.
+
 
 ## How is Damage calculated:
 effectiveness = a variable that can only be either -1, 0, or 1 based off if the move is resistant, normal, or supereffective. 
