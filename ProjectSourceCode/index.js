@@ -16,7 +16,23 @@ const axios = require('axios'); // To make HTTP requests from our server. We'll 
 // *****************************************************
 // <!-- Section 2 : Connect to DB -->
 // *****************************************************
+const dbConfig = {
+  host: process.env.POSTGRES_HOST,
+  port: 5432,
+  database: process.env.POSTGRES_DB,
+  user: process.env.POSTGRES_USER,
+  password: process.env.POSTGRES_PASSWORD,
+};
+const db = pgp(dbConfig);
 
+db.connect()
+  .then(obj => {
+    console.log('Database connection successful');
+    obj.done();
+  })
+  .catch(error => {
+    console.log('ERROR:', error.message || error);
+  });
 // create `ExpressHandlebars` instance and configure the layouts and partials dir.
 const hbs = handlebars.create({
   extname: 'hbs',
