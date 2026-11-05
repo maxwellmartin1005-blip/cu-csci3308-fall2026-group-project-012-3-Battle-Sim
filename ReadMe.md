@@ -73,7 +73,11 @@ cd ProjectSourceCode
 
 ### Step 3: Configure Environment Variables
 
-TODO
+Make an env file resembling this:
+
+POSTGRES_USER="postgres"
+POSTGRES_PASSWORD=<password_here>
+POSTGRES_DB=<db_name_here>
 
 ### Step 4: Start the Application
 
