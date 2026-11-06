@@ -2,6 +2,9 @@ Base Stat Methodolgy
 
 Isnpired loosly by golden sun, base max hp is 500
 
+fighter name:
+
+Element:
 
 base acctack is 50
 
