@@ -16,8 +16,11 @@ CREATE TABLE IF NOT EXISTS fighters(
     creator_id INT NOT NULL,
     name VARCHAR(255) NOT NULL,
     health INT DEFAULT 0 NOT NULL,
-    damage INT DEFAULT 0 NOT NULL,
+    attack INT DEFAULT 0 NOT NULL,
     defense INT DEFAULT 0 NOT NULL,
+    alteration INT DEFAULT 0 NOT NULL,
+    permanence INT DEFAULT 0 NOT NULL,
+    agility INT DEFAULT 0 NOT NULL,
     element VARCHAR(255) NOT NULL,
     image BYTEA DEFAULT NULL,
     FOREIGN KEY (creator_id) REFERENCES users(id)
@@ -28,7 +31,18 @@ CREATE TABLE IF NOT EXISTS moves(
     id SERIAL PRIMARY KEY,
     name VARCHAR(255) NOT NULL,
     damage INT DEFAULT 0 NOT NULL,
-    accuracy INT DEFAULT 0 NOT NULL, 
+    type VARCHAR(255) NOT NULL,
+    alter_attack INT DEFAULT 0 NOT NULL,
+    alter_defense INT DEFAULT 0 NOT NULL,
+    alter_alteration INT DEFAULT 0 NOT NULL,
+    alter_permanence INT DEFAULT 0 NOT NULL,
+    alter_agility INT DEFAULT 0 NOT NULL,
+    alter_self_attack INT DEFAULT 0 NOT NULL,
+    alter_self_defense INT DEFAULT 0 NOT NULL,
+    alter_self_alteration INT DEFAULT 0 NOT NULL,
+    alter_self_permanence INT DEFAULT 0 NOT NULL,
+    alter_self_agility INT DEFAULT 0 NOT NULL,
+    alter_self_health INT DEFAULT 0 NOT NULL,
     element VARCHAR(255) NOT NULL
 );
 
