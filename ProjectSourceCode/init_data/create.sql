@@ -67,21 +67,36 @@ CREATE TABLE IF NOT EXISTS moves_to_fighters(
 );
 
 -- Fights table
-CREATE TYPE fight_status AS ENUM ('player1_wins', 'player2_wins', 'draw', 'in_progress');
+CREATE TYPE fight_status AS ENUM ('player1_won', 'player2_won', 'draw', 'in_progress');
 CREATE TABLE IF NOT EXISTS fights(
     id SERIAL PRIMARY KEY,
-    player1_id INT NOT NULL,
-    player2_id INT NOT NULL,
-    player1_fighter_id INT NOT NULL,
-    player2_fighter_id INT NOT NULL,
-    current_player_id INT DEFAULT NULL,
     turns_played INT DEFAULT 0 NOT NULL,
-    player1_health INT DEFAULT 0 NOT NULL,
-    player2_health INT DEFAULT 0 NOT NULL,
-    status fight_status DEFAULT 'in_progress' NOT NULL,
-    FOREIGN KEY (player1_id) REFERENCES users(id),
-    FOREIGN KEY (player2_id) REFERENCES users(id),
-    FOREIGN KEY (player1_fighter_id) REFERENCES fighters(id),
-    FOREIGN KEY (player2_fighter_id) REFERENCES fighters(id),
-    FOREIGN KEY (current_player_id) REFERENCES users(id)
+    status fight_status DEFAULT 'in_progress' NOT NULL
+);
+
+-- Fights_to_users table
+-- Make sure to keep track of the current player inside battle route
+CREATE TABLE IF NOT EXISTS fights_to_users(
+    fight_id INT NOT NULL,
+    user_id INT NOT NULL,
+    PRIMARY KEY (fight_id, user_id),
+    FOREIGN KEY (fight_id) REFERENCES fights(id),
+    FOREIGN KEY (user_id) REFERENCES users(id)
+);
+
+-- Fights_to_fighters table
+CREATE TABLE IF NOT EXISTS fights_to_fighters(
+    fight_id INT NOT NULL,
+    user_id INT NOT NULL,
+    fighter_id INT NOT NULL,
+    current_health INT DEFAULT 0 NOT NULL,
+    change_attack INT DEFAULT 0 NOT NULL,
+    change_defense INT DEFAULT 0 NOT NULL,
+    change_alteration INT DEFAULT 0 NOT NULL,
+    change_permanence INT DEFAULT 0 NOT NULL,
+    change_agility INT DEFAULT 0 NOT NULL,
+    PRIMARY KEY (fight_id, user_id),
+    FOREIGN KEY (fight_id) REFERENCES fights(id),
+    FOREIGN KEY (user_id) REFERENCES users(id),
+    FOREIGN KEY (fighter_id) REFERENCES fighters(id)
 );
