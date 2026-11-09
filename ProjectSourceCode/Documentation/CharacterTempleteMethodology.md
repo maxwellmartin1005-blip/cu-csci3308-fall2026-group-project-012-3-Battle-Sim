@@ -9,15 +9,15 @@ The following Stat layout is inspired very loosely by the  Golden Sun series,
 
 Base HP is 500
 
-Base attack is 50
+Base attack is 300
 
-Base defense is 50
+Base defense is 300
 
-Aggility = 100
+Aggility = 300
 
-Alteration = 100
+Alteration = 300
 
-Permenence = 100
+Permenence = 300
 
 # Class Creation
 
