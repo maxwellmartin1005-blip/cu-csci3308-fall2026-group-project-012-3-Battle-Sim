@@ -28,7 +28,9 @@ describe('POST /register', () => {
   const {randomUUID} = require('node:crypto');
   const testUser = {
     username: `lab10_${randomUUID()}`,
+    email: 'abc123@gmail.com',
     password: 'TestPassword123!',
+    confirmPassword: 'TestPassword123!',
   };
 
   async function removeTestUser() {
