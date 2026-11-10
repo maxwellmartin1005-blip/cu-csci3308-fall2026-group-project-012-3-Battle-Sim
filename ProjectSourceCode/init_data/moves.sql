@@ -1,5 +1,3 @@
-\i /data/create.sql
-
 INSERT INTO moves (name, damage, type, alter_attack, alter_defense, alter_alteration, alter_permanence, alter_agility, alter_self_attack, alter_self_defense, alter_self_alteration, alter_self_permanence, alter_self_agility, alter_self_health, element)
 VALUES ('Fire Jab', 20, 'quick', -5, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 'fire'),
 ('Ripple', 20, 'quick', 0, -5, 0, 0, 0, 0, 0, 0, 0, 0, 0, 'water'),
