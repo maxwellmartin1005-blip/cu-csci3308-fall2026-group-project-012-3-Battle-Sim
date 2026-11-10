@@ -79,6 +79,4 @@ describe('POST /register', () => {
       true
     );
   });
-  // TODO: Add an async test that submits this username without a password.
-  // Assert the documented rejection response and zero matching database rows.
 });
