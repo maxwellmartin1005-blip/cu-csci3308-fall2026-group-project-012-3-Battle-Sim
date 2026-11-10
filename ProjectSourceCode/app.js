@@ -71,9 +71,10 @@ app.get('/register', (req, res) => {
 });
 
 app.post('/register', async (req, res) => {
-const { username, email, password, confirmPassword } = req.body;
+  const { username, email, password, confirmPassword } = req.body;
+
   if (password !== confirmPassword) {
-    return res.render('pages/register', { message: 'Passwords do not match.' });
+    return res.render('pages/register', { message: 'Passwords do not match.', username, email });
   }
 
   try {
@@ -85,7 +86,10 @@ const { username, email, password, confirmPassword } = req.body;
     res.redirect('/login');
   } catch (err) {
     console.log(err);
-    res.render('pages/register', { message: 'That username or email is already taken.' });
+    const message = err.code === '23505'
+      ? 'That username or email is already taken.'
+      : 'Something went wrong. Please try again.';
+    res.render('pages/register', { message, username, email });
   }
 });
 
