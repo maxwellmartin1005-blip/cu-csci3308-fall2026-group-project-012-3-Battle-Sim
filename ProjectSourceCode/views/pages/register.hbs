@@ -1,21 +1,22 @@
 <form action="/register" method="POST" style="display:flex;flex-direction:column;align-items:center;">
     <div style="margin:0.5rem;padding:0.5rem;">
         <label for="username" style="display:block;">Username</label>
-        <input type="text" name="username" style="display:block;" required>
+        <input type="text" id="username" name="username" value="{{username}}" style="display:block;" required>
     </div>
 
     <div style="margin:0.5rem;padding:0.5rem;">
         <label for="email" style="display:block;">Email</label>
-        <input type="text" name="email" style="display:block;">
+        <input type="email" id="email" name="email" value="{{email}}" style="display:block;" required>
     </div>
 
     <div style="margin:0.5rem;padding:0.5rem;">
         <label for="password" style="display:block;">Password</label>
-        <input type="text" name="password" style="display:block;">
+        <input type="password" id="password" name="password" style="display:block;" required>
     </div>
+
     <div style="margin:0.5rem;padding:0.5rem;">
-        <label for="confirm-password" style="display:block;">Confirm Password</label>
-        <input type="text" name="confirmPassword" style="display:block;">
+        <label for="confirmPassword" style="display:block;">Confirm Password</label>
+        <input type="password" id="confirmPassword" name="confirmPassword" style="display:block;" required>
     </div>
 
     <button>Register</button>
