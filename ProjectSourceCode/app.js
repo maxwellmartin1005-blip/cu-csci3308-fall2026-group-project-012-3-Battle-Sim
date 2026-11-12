@@ -7,8 +7,9 @@ const app = express();
 const handlebars = require('express-handlebars'); //to enable express to work with handlebars
 const Handlebars = require('handlebars'); // to include the templating engine responsible for compiling templates
 const path = require('path');
-const pgp = require('pg-promise')(); // To connect to the Postgres DB from the node server
+const {db} = require('./db');
 const bodyParser = require('body-parser');
+const {randomBytes} = require('node:crypto');
 const session = require('express-session'); // To set the session object. To store or access session data, use the `req.session`, which is (generally) serialized as JSON by the store.
 const bcrypt = require('bcryptjs'); //  To hash passwords
 const axios = require('axios'); // To make HTTP requests from our server. We'll learn more about it in Part C.
@@ -16,24 +17,6 @@ const axios = require('axios'); // To make HTTP requests from our server. We'll 
 // *****************************************************
 // <!-- Section 2 : Connect to DB -->
 // *****************************************************
-
-const dbConfig = {
-  host: process.env.POSTGRES_HOST,
-  port: process.env.POSTGRES_PORT,
-  database: process.env.POSTGRES_DB,
-  user: process.env.POSTGRES_USER,
-  password: process.env.POSTGRES_PASSWORD,
-};
-const db = pgp(dbConfig);
-
-db.connect()
-  .then(obj => {
-    console.log('Database connection successful');
-    obj.done();
-  })
-  .catch(error => {
-    console.log('ERROR:', error.message || error);
-  });
 
 // create `ExpressHandlebars` instance and configure the layouts and partials dir.
 const hbs = handlebars.create({
@@ -53,6 +36,17 @@ app.set('view engine', 'hbs');
 app.set('views', path.join(__dirname, 'views'));
 app.use(bodyParser.json()); // specify the usage of JSON for parsing request body.
 app.use(bodyParser.urlencoded({ extended: true }));
+app.use(session({
+  name: 'battle.sid',
+  secret: process.env.SESSION_SECRET || randomBytes(32).toString('hex'),
+  resave: false,
+  saveUninitialized: false,
+  cookie: {
+    httpOnly: true,
+    sameSite: 'lax',
+    secure: process.env.NODE_ENV === 'production',
+  },
+}));
 
 // *****************************************************
 // <!-- Section 4 : API Routes -->
@@ -64,6 +58,26 @@ app.get('/', (req, res) => {
 
 app.get('/welcome', (req, res) => {
   res.json({status: 'success', message: 'Welcome!'});
+});
+
+app.get('/home', (req, res) => {
+  if (!req.session.user) {
+    return res.redirect('/login');
+  }
+
+  res.set('Cache-Control', 'no-store');
+  return res.render('pages/home', {username: req.session.user.username});
+});
+
+app.post('/logout', (req, res, next) => {
+  req.session.destroy(error => {
+    if (error) {
+      return next(error);
+    }
+
+    res.clearCookie('battle.sid', {path: '/'});
+    return res.redirect('/login');
+  });
 });
 
 app.get('/register', (req, res) => {
@@ -97,10 +111,59 @@ app.get('/login', (req, res) => {
   res.render('pages/login')
 });
 
-app.post('/login', (req, res) => {
-  // TODO: Add login verification here
+app.post('/login', async (req, res) => {
+  const { username, password } = req.body;
+  const hasUsername = typeof username === 'string' && username.trim().length > 0;
+  const hasPassword = typeof password === 'string' && password.length > 0;
 
-  res.redirect('/characterSelect');
+  if (!hasUsername || !hasPassword) {
+    return res.status(400).render('pages/login', {
+      message: 'Enter your username and password.',
+      username: typeof username === 'string' ? username : '',
+    });
+  }
+
+  try {
+    const user = await db.oneOrNone(
+      'SELECT id, username, password_hash FROM users WHERE username = $1',
+      [username]
+    );
+    const passwordMatches = user && await bcrypt.compare(password, user.password_hash);
+    if (!passwordMatches) {
+      return res.status(401).render('pages/login', {
+        message: 'Invalid username or password.',
+        username,
+      });
+    }
+    // Replace the old session ID before saving the signed-in user.
+    return req.session.regenerate(error => {
+      if (error) {
+        return res.status(500).render('pages/login', {
+          message: 'Unable to sign in right now. Please try again.',
+          username,
+        });
+      }
+
+      req.session.user = {id: user.id, username: user.username};
+
+      // Save before redirecting so Home can read the signed-in user.
+      return req.session.save(error => {
+        if (error) {
+          return res.status(500).render('pages/login', {
+            message: 'Unable to sign in right now. Please try again.',
+            username,
+          });
+        }
+
+        return res.redirect('/home');
+      });
+    });
+  } catch (error) {
+    console.error('Login failed:', error.message);
+    return res.status(500).render('pages/login', {
+      message: 'Unable to sign in right now. Please try again.', username,
+    });
+  }
 });
 
 app.get('/characterSelect', (req,res) => {
