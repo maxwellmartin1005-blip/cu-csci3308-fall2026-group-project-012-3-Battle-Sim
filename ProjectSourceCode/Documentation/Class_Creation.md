@@ -25,6 +25,14 @@ Aggility = 300
 
 one normal atack, one strong atack, two status moves
 
+fire jab
+
+Fire Punch
+
+Hype
+
+Flame On
+
  ## high speed class
 
  Name: Speedster the Living Rapid

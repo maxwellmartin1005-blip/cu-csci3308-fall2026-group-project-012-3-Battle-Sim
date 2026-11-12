@@ -6,8 +6,10 @@ INSERT INTO fighters (creator_id, name , health, attack, defense, alteration, pe
 VALUES (0, 'The Generic One, Master of None', 500, 300, 300, 300, 300, 300, 'fire')
 ;
 
-INSERT INTO Moves_to_Fighters  (FighterID, MovesID) VALUES (); 
-
+INSERT INTO Moves_to_Fighters  (FighterID, MovesID) VALUES (0,1); 
+INSERT INTO Moves_to_Fighters  (FighterID, MovesID) VALUES (0,7);
+INSERT INTO Moves_to_Fighters  (FighterID, MovesID) VALUES (0,7);
+INSERT INTO Moves_to_Fighters  (FighterID, MovesID) VALUES (0,7); 
 
 
 INSERT INTO fighters (creator_id, name , health, attack, defense, alteration, permanence, agility, element) 
