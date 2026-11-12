@@ -9,6 +9,7 @@ const Handlebars = require('handlebars'); // to include the templating engine re
 const path = require('path');
 const {db} = require('./db');
 const bodyParser = require('body-parser');
+const {randomBytes} = require('node:crypto');
 const session = require('express-session'); // To set the session object. To store or access session data, use the `req.session`, which is (generally) serialized as JSON by the store.
 const bcrypt = require('bcryptjs'); //  To hash passwords
 const axios = require('axios'); // To make HTTP requests from our server. We'll learn more about it in Part C.
@@ -35,6 +36,17 @@ app.set('view engine', 'hbs');
 app.set('views', path.join(__dirname, 'views'));
 app.use(bodyParser.json()); // specify the usage of JSON for parsing request body.
 app.use(bodyParser.urlencoded({ extended: true }));
+app.use(session({
+  name: 'battle.sid',
+  secret: process.env.SESSION_SECRET || randomBytes(32).toString('hex'),
+  resave: false,
+  saveUninitialized: false,
+  cookie: {
+    httpOnly: true,
+    sameSite: 'lax',
+    secure: process.env.NODE_ENV === 'production',
+  },
+}));
 
 // *****************************************************
 // <!-- Section 4 : API Routes -->
@@ -49,7 +61,23 @@ app.get('/welcome', (req, res) => {
 });
 
 app.get('/home', (req, res) => {
-  res.render('pages/home', { username: 'Player' });
+  if (!req.session.user) {
+    return res.redirect('/login');
+  }
+
+  res.set('Cache-Control', 'no-store');
+  return res.render('pages/home', {username: req.session.user.username});
+});
+
+app.post('/logout', (req, res, next) => {
+  req.session.destroy(error => {
+    if (error) {
+      return next(error);
+    }
+
+    res.clearCookie('battle.sid', {path: '/'});
+    return res.redirect('/login');
+  });
 });
 
 app.get('/register', (req, res) => {
@@ -107,12 +135,33 @@ app.post('/login', async (req, res) => {
         username,
       });
     }
-    return res.redirect('/characterSelect');
+    // Replace the old session ID before saving the signed-in user.
+    return req.session.regenerate(error => {
+      if (error) {
+        return res.status(500).render('pages/login', {
+          message: 'Unable to sign in right now. Please try again.',
+          username,
+        });
+      }
+
+      req.session.user = {id: user.id, username: user.username};
+
+      // Save before redirecting so Home can read the signed-in user.
+      return req.session.save(error => {
+        if (error) {
+          return res.status(500).render('pages/login', {
+            message: 'Unable to sign in right now. Please try again.',
+            username,
+          });
+        }
+
+        return res.redirect('/home');
+      });
+    });
   } catch (error) {
     console.error('Login failed:', error.message);
     return res.status(500).render('pages/login', {
-      message: 'Unable to sign in right now. Please try again.',
-      username,
+      message: 'Unable to sign in right now. Please try again.', username,
     });
   }
 });
