@@ -1,0 +1,13 @@
+<main class="home-page" aria-labelledby="home-title">
+    <div class="home-page__toolbar">
+        <form action="/logout" method="POST">
+            <button type="submit">Log out</button>
+        </form>
+    </div>
+
+    <section class="home-page__welcome">
+        <h2 id="home-title">Welcome, {{username}}!</h2>
+        <button class="home-page__play" type="button" disabled>Play</button>
+        <p class="text-muted">Play is a placeholder while game navigation is being connected.</p>
+    </section>
+</main>
