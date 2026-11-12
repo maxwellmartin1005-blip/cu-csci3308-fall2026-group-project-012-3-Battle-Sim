@@ -4,13 +4,15 @@ INSERT INTO users (id, username, password_hash,email) VALUES (0, 'admin', '$2a$1
 
 INSERT INTO fighters (creator_id, name , health, attack, defense, alteration, permanence, agility, element) 
 VALUES (0, 'The Generic One, Master of None', 500, 300, 300, 300, 300, 300, 'fire')
-;
+returning *;
 
-INSERT INTO Moves_to_Fighters  (FighterID, MovesID) VALUES (0,1); 
-INSERT INTO Moves_to_Fighters  (FighterID, MovesID) VALUES (0,7);
-INSERT INTO Moves_to_Fighters  (FighterID, MovesID) VALUES (0,7);
-INSERT INTO Moves_to_Fighters  (FighterID, MovesID) VALUES (0,7); 
+INSERT INTO moves_to_fighters  (fighter_id, move_id) VALUES (1,1)returning *;
+INSERT INTO moves_to_fighters  (fighter_id, move_id) VALUES (1,7)returning *;
+INSERT INTO moves_to_fighters  (fighter_id, move_id) VALUES (1,19)returning *;
+INSERT INTO moves_to_fighters  (fighter_id, move_id) VALUES (1,31)returning *;
 
+--query to make sure everything was created correctly
+SELECT moves.name FROM moves_to_fighters JOIN moves ON moves.id= moves_to_fighters.move_id JOIN fighters ON moves_to_fighters.fighter_id=fighters.id  WHERE fighters.id =1;
 
 INSERT INTO fighters (creator_id, name , health, attack, defense, alteration, permanence, agility, element) 
 VALUES (0, 'Speedster the Living Rapid', 475, 300, 250, 300, 325, 350, 'water')
