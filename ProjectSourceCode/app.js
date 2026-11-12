@@ -48,6 +48,10 @@ app.get('/welcome', (req, res) => {
   res.json({status: 'success', message: 'Welcome!'});
 });
 
+app.get('/home', (req, res) => {
+  res.render('pages/home', { username: 'Player' });
+});
+
 app.get('/register', (req, res) => {
   res.render('pages/register')
 });
