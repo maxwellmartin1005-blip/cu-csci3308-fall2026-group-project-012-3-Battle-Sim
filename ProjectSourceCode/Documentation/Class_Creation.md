@@ -2,12 +2,24 @@
 
 ## Base class/wellrounder
  
- Name:  The Gernic one, master of none 
+ Name:  The Generic One, Master of None 
  
  Elemental Type: fire
 
 
- ### Stats: Still being finalized but will have no modifier.
+ ### Stats: 
+
+Health = 500
+
+attack = 300
+
+defense = 300
+
+Alteration = 300
+
+Permenence = 300
+
+Aggility = 300
 
 ### Moves: Still being finalized so type of moves will be disccused
 
@@ -15,12 +27,24 @@ one normal atack, one strong atack, two status moves
 
  ## high speed class
 
- Name: Speedster the living rapid
+ Name: Speedster the Living Rapid
 
 Elmental Type: Water
 
 
  ### Stats: Still being finalized
+
+Health = 500 - 25 = 475
+
+Attack = 300
+
+Defense = 300 -50 = 250
+
+Alteration = 300 
+
+Permenence = 300 + 25 = 325
+
+Aggility = 300 + 50 = 350
 
  Aggitly +50, defense -50, helth -25, permenece +25
 
@@ -39,6 +63,18 @@ Elmental Type: earth
 
  ### Stats: Still being finalized
 
+ Health = 500 +25 = 525
+
+Attack = 300
+
+Defense = 300 +50 = 350
+
+Alteration = 300 -25= 275
+
+Permenence = 300 
+
+Aggility = 300 - 50 = 250
+
  Aggitly -50, defense +50, helth +25, alteration -25
 
  Rationoal: The idea for this charecter is that of like a giant rock monster, they are slow and high in helth and dfense as it is hard to break rock. alteation is -25 as rocks are thought of as hard to change
@@ -49,11 +85,23 @@ Earth bassed moves, one maybe two aleterations, esspcialy foucoing on deffense b
 
 ## high alteration class status move foucoused class
 
- Name: Druid of the swift weeds
+ Name: Druid of the Swift Weeds
 
 Elmental Type: life
 
  ### Stats: Still being finalized
+
+Health = 500
+
+attack = 300
+
+defense = 300 - 25 = 275
+
+Alteration = 300 +50 = 350
+
+Permenence = 300 -50 = 250 
+
+Aggility = 300 +25 = 325
 
  Altaretion +50 , defense -25, aggility +25, permence -50
 
@@ -68,9 +116,22 @@ Life bassed moves, a weaker fast atack should eb it only attack, the rest should
 
  Name: Inferno the Ash Bringer
 
-Elmental Type: fie
+Elmental Type: fire
 
  ### Stats: Still being finalized
+
+ 
+Health = 500 
+
+attack = 300 +50 = 350
+
+defense = 300 -25 = 275
+
+Alteration = 300
+
+Permenence = 300 -50 = 250
+
+Aggility = 300 +25 = 325
 
 Attack +50, aggility +25, deffense -25, permenece -50
 
@@ -86,7 +147,19 @@ Fire bassed moves, either full half and half with stauts and atack, or just one 
 
 Elmental Type: light
 
- ### Stats: Still being finalized
+ ### Stats: Still 
+
+ Health = 500 + 50 = 550
+
+attack = 300 -25 = 275
+
+defense = 300 
+
+Alteration = 300 +25 = 325
+
+Permenence = 300 -50 = 250
+
+Aggility = 300
 
  HP +50, alteration +25, permence -50, attack -25 
 
@@ -104,6 +177,18 @@ Maybe more status move foucoused, at least one atack.
 Elmental Type: dark
 
  ### Stats: Still being finalized
+
+Health = 500
+
+attack = 300 -25 = 275
+
+defense = 300 - 50 = 250
+
+Alteration = 300 + 25 = 325
+
+Permenence = 300 +50 = 350
+
+Aggility = 300
 
   permence +50, alteration +25, deffense -50, attack -25
 
