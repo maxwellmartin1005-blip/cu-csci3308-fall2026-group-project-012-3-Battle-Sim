@@ -30,7 +30,7 @@ describe('Login credentials', () => {
     const res = await chai.request(app).post('/login').type('form')
       .send({username, password}).redirects(0);
     expect(res).to.have.status(302);
-    expect(res).to.have.header('location', '/characterSelect');
+    expect(res).to.have.header('location', '/home');
   });
 
   const invalidCredentials = [
