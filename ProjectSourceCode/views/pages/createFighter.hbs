@@ -1,43 +1,68 @@
-<form action="/createFighter" method="POST" enctype="multipart/form-data"
-      style="display:flex;flex-direction:column;align-items:center;">
-    <h1>Create Fighter</h1>
+<main class="create-fighter-page">
+    <h2>Create Fighter</h2>
+    <p class="text-muted">Preview: check your fighter details. Saving is not available yet.</p>
 
-    <div style="margin:0.5rem;padding:0.5rem;">
-        <label for="fighterName" style="display:block;">Fighter Name</label>
-        <input type="text" id="fighterName" name="fighterName" required>
+    {{#if errors}}
+    <div class="alert alert-danger" role="alert">
+        <ul class="mb-0">{{#each errors}}<li>{{this}}</li>{{/each}}</ul>
+        <p class="mb-0 mt-2">Choose your image again before checking the form.</p>
     </div>
+    {{/if}}
+    {{#if message}}<p class="alert alert-success" role="status">{{message}}</p>{{/if}}
 
-    <div style="margin:0.5rem;padding:0.5rem;">
-        <label for="fighterImage" style="display:block;">Fighter Image</label>
-        <input type="file" id="fighterImage" name="fighterImage" accept="image/*" required>
-        <img id="imagePreview" alt="Image preview"
-             style="display:none;max-width:150px;margin-top:0.5rem;">
-    </div>
-
-    <fieldset style="margin:0.5rem;padding:0.5rem;">
-        <legend>Choose Moves</legend>
-        <label><input type="checkbox" name="moves" value="quickHit"> Quick Hit</label><br>
-        <label><input type="checkbox" name="moves" value="heavyHit"> Heavy Hit</label><br>
-        <label><input type="checkbox" name="moves" value="guard"> Guard</label>
-    </fieldset>
-
-    <div>
-        <button type="submit">Save Fighter</button>
-        <a href="/characterSelect">Cancel</a>
-    </div>
-</form>
+    <form action="/createFighter" method="POST" enctype="multipart/form-data">
+        <div class="mb-3">
+            <label for="fighterName" class="form-label">Fighter name</label>
+            <input class="form-control" id="fighterName" name="fighterName" value="{{fighterName}}" maxlength="255" required>
+        </div>
+        <div class="mb-3">
+            <label for="element" class="form-label">Element</label>
+            <select class="form-select" id="element" name="element" required>
+                <option value="">Choose an element</option>
+                {{#each elements}}<option value="{{value}}" {{#if selected}}selected{{/if}}>{{value}}</option>{{/each}}
+            </select>
+        </div>
+        <div class="mb-3">
+            <label for="fighterImage" class="form-label">Fighter image</label>
+            <input class="form-control" type="file" id="fighterImage" name="fighterImage" accept="image/png,image/jpeg" aria-describedby="image-help" required>
+            <p id="image-help" class="form-text">PNG or JPEG, up to 2 MB.</p>
+            <img id="imagePreview" class="create-fighter-page__image" alt="Your fighter image preview" hidden>
+        </div>
+        <fieldset class="mb-3">
+            <legend class="fs-5">Choose moves</legend>
+            <p class="form-text">Choose at least one move.</p>
+            <div class="create-fighter-page__moves">
+                {{#each moves}}
+                <label class="create-fighter-page__move">
+                    <input type="checkbox" name="moves" value="{{id}}" {{#if checked}}checked{{/if}}>
+                    <span>{{name}} <small class="text-muted">({{element}}, {{type}})</small></span>
+                </label>
+                {{else}}<p>No moves are available yet.</p>{{/each}}
+            </div>
+        </fieldset>
+        <button type="submit">Check fighter</button>
+        <a class="ms-3" href="/characterSelect">Cancel</a>
+    </form>
+</main>
 
 <script>
   const imageInput = document.getElementById('fighterImage');
   const preview = document.getElementById('imagePreview');
+  let previewUrl;
 
   imageInput.addEventListener('change', () => {
+    if (previewUrl) URL.revokeObjectURL(previewUrl);
+    preview.hidden = true;
+    imageInput.setCustomValidity('');
     const file = imageInput.files[0];
-    if (file) {
-      preview.src = URL.createObjectURL(file);
-      preview.style.display = 'block';
-    } else {
-      preview.style.display = 'none';
+    if (!file) return;
+    if (!['image/png', 'image/jpeg'].includes(file.type) || file.size > 2 * 1024 * 1024) {
+      imageInput.setCustomValidity('Choose a PNG or JPEG image no larger than 2 MB.');
+      imageInput.reportValidity();
+      return;
     }
+    previewUrl = URL.createObjectURL(file);
+    preview.src = previewUrl;
+    preview.hidden = false;
   });
 </script>

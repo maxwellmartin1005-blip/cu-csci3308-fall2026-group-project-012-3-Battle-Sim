@@ -11,6 +11,8 @@ const {db} = require('./db');
 const bodyParser = require('body-parser');
 const {randomBytes} = require('node:crypto');
 const session = require('express-session'); // To set the session object. To store or access session data, use the `req.session`, which is (generally) serialized as JSON by the store.
+const multer = require('multer');
+const {elements, maxImageSize, validateFighter} = require('./validateFighter');
 const bcrypt = require('bcryptjs'); //  To hash passwords
 const axios = require('axios'); // To make HTTP requests from our server. We'll learn more about it in Part C.
 
@@ -170,13 +172,64 @@ app.get('/characterSelect', (req,res) => {
   res.render('pages/characterSelect');
 });
 
-app.get('/createFighter', (req, res) => {
-  res.render('pages/createFighter');
+const fighterUpload = multer({
+  storage: multer.memoryStorage(),
+  limits: {fileSize: maxImageSize, files: 1, fields: 100, parts: 101},
 });
 
-app.post('/createFighter', (req, res) => {
-  //save the fighter once the database is set up
-  res.redirect('/characterSelect');
+function requireLogin(req, res, next) {
+  if (!req.session.user) {
+    return res.redirect('/login');
+  }
+  next();
+}
+
+async function fighterForm(input = {}) {
+  const moves = await db.any('SELECT id, name, element, type FROM moves ORDER BY element, name');
+  const selectedMoves = Array.isArray(input.moves) ? input.moves : [input.moves];
+  return {
+    fighterName: typeof input.fighterName === 'string' ? input.fighterName : '',
+    elements: elements.map(value => ({value, selected: input.element === value})),
+    moves: moves.map(move => ({...move, checked: selectedMoves.includes(String(move.id))})),
+  };
+}
+
+app.get('/createFighter', requireLogin, async (req, res, next) => {
+  try {
+    res.render('pages/createFighter', await fighterForm());
+  } catch (error) {
+    next(error);
+  }
+});
+
+app.post('/createFighter', requireLogin, fighterUpload.single('fighterImage'), async (req, res, next) => {
+  try {
+    const form = await fighterForm(req.body);
+    const errors = validateFighter(req.body, req.file, form.moves);
+    if (errors.length) {
+      return res.status(400).render('pages/createFighter', {...form, errors});
+    }
+    return res.render('pages/createFighter', {
+      ...form,
+      message: 'Fighter details look good. Saving is not available yet.',
+    });
+  } catch (error) {
+    next(error);
+  }
+});
+
+app.use('/createFighter', async (error, req, res, next) => {
+  if (!(error instanceof multer.MulterError)) return next(error);
+  try {
+    const message = error.code === 'LIMIT_FILE_SIZE'
+      ? 'Choose an image no larger than 2 MB.'
+      : 'Upload one image and choose from the available moves.';
+    res.status(400).render('pages/createFighter', {
+      ...await fighterForm(req.body), errors: [message],
+    });
+  } catch (databaseError) {
+    next(databaseError);
+  }
 });
 
 app.get('/battleResults', (req, res) => {
