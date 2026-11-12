@@ -7,7 +7,7 @@ const app = express();
 const handlebars = require('express-handlebars'); //to enable express to work with handlebars
 const Handlebars = require('handlebars'); // to include the templating engine responsible for compiling templates
 const path = require('path');
-const pgp = require('pg-promise')(); // To connect to the Postgres DB from the node server
+const {db} = require('./db');
 const bodyParser = require('body-parser');
 const session = require('express-session'); // To set the session object. To store or access session data, use the `req.session`, which is (generally) serialized as JSON by the store.
 const bcrypt = require('bcryptjs'); //  To hash passwords
@@ -16,24 +16,6 @@ const axios = require('axios'); // To make HTTP requests from our server. We'll 
 // *****************************************************
 // <!-- Section 2 : Connect to DB -->
 // *****************************************************
-
-const dbConfig = {
-  host: process.env.POSTGRES_HOST,
-  port: process.env.POSTGRES_PORT,
-  database: process.env.POSTGRES_DB,
-  user: process.env.POSTGRES_USER,
-  password: process.env.POSTGRES_PASSWORD,
-};
-const db = pgp(dbConfig);
-
-db.connect()
-  .then(obj => {
-    console.log('Database connection successful');
-    obj.done();
-  })
-  .catch(error => {
-    console.log('ERROR:', error.message || error);
-  });
 
 // create `ExpressHandlebars` instance and configure the layouts and partials dir.
 const hbs = handlebars.create({
@@ -101,10 +83,38 @@ app.get('/login', (req, res) => {
   res.render('pages/login')
 });
 
-app.post('/login', (req, res) => {
-  // TODO: Add login verification here
+app.post('/login', async (req, res) => {
+  const { username, password } = req.body;
+  const hasUsername = typeof username === 'string' && username.trim().length > 0;
+  const hasPassword = typeof password === 'string' && password.length > 0;
 
-  res.redirect('/characterSelect');
+  if (!hasUsername || !hasPassword) {
+    return res.status(400).render('pages/login', {
+      message: 'Enter your username and password.',
+      username: typeof username === 'string' ? username : '',
+    });
+  }
+
+  try {
+    const user = await db.oneOrNone(
+      'SELECT id, username, password_hash FROM users WHERE username = $1',
+      [username]
+    );
+    const passwordMatches = user && await bcrypt.compare(password, user.password_hash);
+    if (!passwordMatches) {
+      return res.status(401).render('pages/login', {
+        message: 'Invalid username or password.',
+        username,
+      });
+    }
+    return res.redirect('/characterSelect');
+  } catch (error) {
+    console.error('Login failed:', error.message);
+    return res.status(500).render('pages/login', {
+      message: 'Unable to sign in right now. Please try again.',
+      username,
+    });
+  }
 });
 
 app.get('/characterSelect', (req,res) => {
