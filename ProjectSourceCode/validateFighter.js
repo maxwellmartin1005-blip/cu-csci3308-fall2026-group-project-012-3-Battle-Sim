@@ -18,7 +18,7 @@ async function validateImage(image) {
     // Decode the pixels too: a valid-looking header alone does not prove the image is readable.
     await decoder.raw().toBuffer();
     return null;
-  } catch (error) {
+  } catch {
     return 'Use a readable PNG or JPEG image file.';
   }
 }
@@ -33,15 +33,14 @@ async function validateFighter(input, image, availableMoves) {
     errors.push('Choose one of the six elements.');
   }
 
-  const selectedMoves = Array.isArray(input.moves) ? input.moves : [input.moves];
-  const moveIds = selectedMoves.filter(value => typeof value === 'string' && /^[1-9]\d*$/.test(value));
-  const validMoves = new Set(availableMoves.map(move => String(move.id)));
+  const selectedMoves = input.moves || [];
+  const moveIds = Array.isArray(selectedMoves) ? selectedMoves : [selectedMoves];
+  const availableMoveIds = new Set(availableMoves.map(move => String(move.id)));
   const hasMoves = moveIds.length > 0;
-  const hasInvalidMoveIds = moveIds.length !== selectedMoves.length;
   const hasDuplicateMoves = new Set(moveIds).size !== moveIds.length;
-  const hasUnknownMoves = moveIds.some(id => !validMoves.has(id));
+  const hasUnknownMoves = moveIds.some(id => !availableMoveIds.has(id));
 
-  if (!hasMoves || hasInvalidMoveIds || hasDuplicateMoves || hasUnknownMoves) {
+  if (!hasMoves || hasDuplicateMoves || hasUnknownMoves) {
     errors.push('Choose at least one available move.');
   }
 

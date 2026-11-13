@@ -219,14 +219,15 @@ app.post('/createFighter', requireLogin, fighterUpload.single('fighterImage'), a
 });
 
 app.use('/createFighter', async (error, req, res, next) => {
-  if (!(error instanceof multer.MulterError)) return next(error);
+  if (!(error instanceof multer.MulterError)) {
+    return next(error);
+  }
   try {
     const message = error.code === 'LIMIT_FILE_SIZE'
       ? 'Choose an image no larger than 2 MB.'
       : 'Upload one image and choose from the available moves.';
-    res.status(400).render('pages/createFighter', {
-      ...await getFighterFormData(req.body), errors: [message],
-    });
+    const form = await getFighterFormData(req.body);
+    res.status(400).render('pages/createFighter', {...form, errors: [message]});
   } catch (databaseError) {
     next(databaseError);
   }
