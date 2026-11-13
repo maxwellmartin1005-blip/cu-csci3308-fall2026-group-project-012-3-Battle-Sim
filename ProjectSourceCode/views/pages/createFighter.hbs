@@ -4,11 +4,17 @@
 
     {{#if errors}}
     <div class="alert alert-danger" role="alert">
-        <ul class="mb-0">{{#each errors}}<li>{{this}}</li>{{/each}}</ul>
+        <ul class="mb-0">
+            {{#each errors}}
+            <li>{{this}}</li>
+            {{/each}}
+        </ul>
         <p class="mb-0 mt-2">Choose your image again before checking the form.</p>
     </div>
     {{/if}}
-    {{#if message}}<p class="alert alert-success" role="status">{{message}}</p>{{/if}}
+    {{#if message}}
+    <p class="alert alert-success" role="status">{{message}}</p>
+    {{/if}}
 
     <form action="/createFighter" method="POST" enctype="multipart/form-data">
         <div class="mb-3">
@@ -19,7 +25,9 @@
             <label for="element" class="form-label">Element</label>
             <select class="form-select" id="element" name="element" required>
                 <option value="">Choose an element</option>
-                {{#each elements}}<option value="{{value}}" {{#if selected}}selected{{/if}}>{{value}}</option>{{/each}}
+                {{#each elements}}
+                <option value="{{value}}" {{#if selected}}selected{{/if}}>{{value}}</option>
+                {{/each}}
             </select>
         </div>
         <div class="mb-3">
@@ -37,7 +45,9 @@
                     <input type="checkbox" name="moves" value="{{id}}" {{#if checked}}checked{{/if}}>
                     <span>{{name}} <small class="text-muted">({{element}}, {{type}})</small></span>
                 </label>
-                {{else}}<p>No moves are available yet.</p>{{/each}}
+                {{else}}
+                <p>No moves are available yet.</p>
+                {{/each}}
             </div>
         </fieldset>
         <button type="submit">Check fighter</button>

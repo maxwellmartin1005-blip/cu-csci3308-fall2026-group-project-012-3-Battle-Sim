@@ -184,7 +184,7 @@ function requireLogin(req, res, next) {
   next();
 }
 
-async function fighterForm(input = {}) {
+async function getFighterFormData(input = {}) {
   const moves = await db.any('SELECT id, name, element, type FROM moves ORDER BY element, name');
   const selectedMoves = Array.isArray(input.moves) ? input.moves : [input.moves];
   return {
@@ -196,7 +196,7 @@ async function fighterForm(input = {}) {
 
 app.get('/createFighter', requireLogin, async (req, res, next) => {
   try {
-    res.render('pages/createFighter', await fighterForm());
+    res.render('pages/createFighter', await getFighterFormData());
   } catch (error) {
     next(error);
   }
@@ -204,8 +204,8 @@ app.get('/createFighter', requireLogin, async (req, res, next) => {
 
 app.post('/createFighter', requireLogin, fighterUpload.single('fighterImage'), async (req, res, next) => {
   try {
-    const form = await fighterForm(req.body);
-    const errors = validateFighter(req.body, req.file, form.moves);
+    const form = await getFighterFormData(req.body);
+    const errors = await validateFighter(req.body, req.file, form.moves);
     if (errors.length) {
       return res.status(400).render('pages/createFighter', {...form, errors});
     }
@@ -225,7 +225,7 @@ app.use('/createFighter', async (error, req, res, next) => {
       ? 'Choose an image no larger than 2 MB.'
       : 'Upload one image and choose from the available moves.';
     res.status(400).render('pages/createFighter', {
-      ...await fighterForm(req.body), errors: [message],
+      ...await getFighterFormData(req.body), errors: [message],
     });
   } catch (databaseError) {
     next(databaseError);

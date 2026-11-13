@@ -1,31 +1,52 @@
+const sharp = require('sharp');
+
 const elements = ['fire', 'water', 'earth', 'life', 'light', 'dark'];
 const maxImageSize = 2 * 1024 * 1024;
 
-function validateFighter(input, image, availableMoves) {
+async function validateImage(image) {
+  if (!image) return 'Choose a PNG or JPEG image.';
+  if (image.size > maxImageSize) return 'Choose an image no larger than 2 MB.';
+
+  const imageTypes = {png: 'image/png', jpeg: 'image/jpeg'};
+  try {
+    const decoder = sharp(image.buffer, {failOn: 'warning'});
+    const metadata = await decoder.metadata();
+    if (!imageTypes[metadata.format] || image.mimetype !== imageTypes[metadata.format]) {
+      return 'Use a readable PNG or JPEG image file.';
+    }
+
+    // Decode the pixels too: a valid-looking header alone does not prove the image is readable.
+    await decoder.raw().toBuffer();
+    return null;
+  } catch (error) {
+    return 'Use a readable PNG or JPEG image file.';
+  }
+}
+
+async function validateFighter(input, image, availableMoves) {
   const errors = [];
   const name = typeof input.fighterName === 'string' ? input.fighterName.trim() : '';
-  if (!name || name.length > 255) errors.push('Enter a fighter name between 1 and 255 characters.');
-  if (!elements.includes(input.element)) errors.push('Choose one of the six elements.');
+  if (!name || name.length > 255) {
+    errors.push('Enter a fighter name between 1 and 255 characters.');
+  }
+  if (!elements.includes(input.element)) {
+    errors.push('Choose one of the six elements.');
+  }
 
   const selectedMoves = Array.isArray(input.moves) ? input.moves : [input.moves];
   const moveIds = selectedMoves.filter(value => typeof value === 'string' && /^[1-9]\d*$/.test(value));
   const validMoves = new Set(availableMoves.map(move => String(move.id)));
-  if (!moveIds.length || moveIds.length !== selectedMoves.length ||
-      new Set(moveIds).size !== moveIds.length || moveIds.some(id => !validMoves.has(id))) {
+  const hasMoves = moveIds.length > 0;
+  const hasInvalidMoveIds = moveIds.length !== selectedMoves.length;
+  const hasDuplicateMoves = new Set(moveIds).size !== moveIds.length;
+  const hasUnknownMoves = moveIds.some(id => !validMoves.has(id));
+
+  if (!hasMoves || hasInvalidMoveIds || hasDuplicateMoves || hasUnknownMoves) {
     errors.push('Choose at least one available move.');
   }
 
-  if (!image) {
-    errors.push('Choose a PNG or JPEG image.');
-  } else {
-    const data = image.buffer;
-    const png = data.subarray(0, 8).equals(Buffer.from([137, 80, 78, 71, 13, 10, 26, 10]));
-    const jpeg = data.length >= 3 && data[0] === 255 && data[1] === 216 && data[2] === 255;
-    if (!((png && image.mimetype === 'image/png') || (jpeg && image.mimetype === 'image/jpeg'))) {
-      errors.push('Use a PNG or JPEG image file.');
-    }
-    if (image.size > maxImageSize) errors.push('Choose an image no larger than 2 MB.');
-  }
+  const imageError = await validateImage(image);
+  if (imageError) errors.push(imageError);
   return errors;
 }
 
