@@ -13,7 +13,7 @@
                 <span>Health</span>
                 <span>75 / 100 HP</span>
             </label>
-            <meter class="battle-screen__health" id="battle-health-a" min="0" max="100" value="75">
+            <meter class="battle-screen__health" id="battle-health-a" min="0" max="100" value="100">
                 75 out of 100 health points
             </meter>
         </article>
@@ -28,13 +28,13 @@
                 <span>Health</span>
                 <span>60 / 100 HP</span>
             </label>
-            <meter class="battle-screen__health" id="battle-health-b" min="0" max="100" value="60">
+            <meter class="battle-screen__health" id="battle-health-b" min="0" max="100" value="100">
                 60 out of 100 health points
             </meter>
         </article>
     </div>
 
-    <fieldset class="battle-screen__moves" disabled aria-describedby="battle-moves-note">
+    <fieldset class="battle-screen__moves" id="player-moves" aria-describedby="battle-moves-note">
         <legend>Sample moves</legend>
         <p class="battle-screen__note" id="battle-moves-note">
             Preview only: these move buttons do not start a turn.
@@ -46,3 +46,62 @@
         </div>
     </fieldset>
 </section>
+
+<script>
+    const playerMoves = document.getElementById("player-moves");
+    const playerHealthBar = document.getElementById("battle-health-a");
+    const enemyHealthBar = document.getElementById("battle-health-b");
+
+    let playerTurn = true;
+    let gameOver = false;
+
+    playerMoves.addEventListener('click', async(event) => {
+        const typeOfClickedElement = event.target.type;
+
+        if (typeOfClickedElement !== 'button' || !playerTurn || gameOver) {
+            return;
+        };
+
+        enemyHealthBar.value -= 40;
+        checkBattleStatus();
+        switchTurn();
+
+        if (!gameOver) {
+            await enemyGoes();
+            checkBattleStatus();
+            switchTurn();
+        }
+    })
+
+    const switchTurn = () => {
+        if(playerTurn) {
+            console.log('turning to enemy turn')
+            playerTurn = false;
+            playerMoves.disabled = true;
+        } else if (!playerTurn) {
+            console.log('turning back to your turn')
+            playerTurn = true;
+            playerMoves.disabled = false;
+        }
+    }
+
+    const enemyGoes = async () => {
+        await new Promise(resolve => setTimeout(resolve, 1000));
+        playerHealthBar.value -= 20;
+    }
+
+    const checkBattleStatus = () => {
+        if (playerHealthBar.value <= 0 ||
+            enemyHealthBar.value <= 0) {
+
+            gameOver = true;
+            playerMoves.disabled = true;
+
+            const queryString = enemyHealthBar.value <= 0
+                ? '?outcome=victory&winner=Fighter A&loser=Fighter B'
+                : '?outcome=defeat&winner=Fighter B&loser=Fighter A';
+
+            window.location.href = `/battleResults${queryString}`;
+        }
+}
+</script>
