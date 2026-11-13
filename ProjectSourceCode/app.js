@@ -12,6 +12,7 @@ const bodyParser = require('body-parser');
 const session = require('express-session'); // To set the session object. To store or access session data, use the `req.session`, which is (generally) serialized as JSON by the store.
 const bcrypt = require('bcryptjs'); //  To hash passwords
 const axios = require('axios'); // To make HTTP requests from our server. We'll learn more about it in Part C.
+const getFighter = require('./props/getFighter');
 
 // *****************************************************
 // <!-- Section 2 : Connect to DB -->
@@ -126,8 +127,12 @@ app.get('/battleResults', (req, res) => {
     loser: isVictory ? 'Fighter B' : 'Fighter A',
   });
 });
-app.get('/battle', (req, res) => {
-  res.render('pages/battle')
+
+app.get('/battle', async(req, res) => {
+  // Uncomment this line for testing purposes
+  // const userFighter = await getFighter(0, db)
+
+  res.render('pages/battle', {userFighter: userFighter})
 });
 
 module.exports = app;
