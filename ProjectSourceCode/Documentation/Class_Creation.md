@@ -17,13 +17,12 @@ defense = 300
 
 Alteration = 300
 
-Permenence = 300
+Permanence = 300
 
 Aggility = 300
 
-### Moves: Still being finalized so type of moves will be disccused
+### Moves: 
 
-one normal atack, one strong atack, two status moves
 
 fire jab
 
@@ -33,14 +32,14 @@ Hype
 
 Flame On
 
- ## high speed class
+ ## High Speed Class
 
  Name: Speedster the Living Rapid
 
-Elmental Type: Water
+Elemental Type: water
 
 
- ### Stats: Still being finalized
+ ### Stats
 
 Health = 500 - 25 = 475
 
@@ -50,26 +49,27 @@ Defense = 300 -50 = 250
 
 Alteration = 300 
 
-Permenence = 300 + 25 = 325
+Permanence = 300 + 25 = 325
 
 Aggility = 300 + 50 = 350
 
- Aggitly +50, defense -50, helth -25, permenece +25
 
- Rationoal: A speedster naturaly should have a high speed stat, but the reaming buff adn two debuffs need ot be applied, defense was chosen for -50 as often more defnsive objects like armoro or sheilds are heavier, so a lighter and in turn faster charecter would have to have less armor. helth goes down by -25 as simailry health can be somtimes though of as how many hits can you take, a more muscialer person could take more hits, but are weighed down by said muscle, so a fsaster charecter would have less musccles and less health. This is also for balncing, a charecter this fast can easily do a lot of damge to their opponet before they can make one omve, so making them fragile balnces out this advantage 
+ <!--- Agility +50, defense -50, health -25, permanence +25 --->
 
-### Moves: Still being finalized so type of moves will be disccused
-Watter bassed moves, esspicaly fast ones maybe a foucous on the agillity spells to go even faster?
+ Rationale: A speedster naturally should have a high speed stat, but the remaining buff and two debuffs need to be applied. Defense was chosen for -50, as often more defensive objects like armor or shields are heavier, so a lighter and, in turn, faster character would have to have less armor. Health goes down by -25, as similarly, health can be sometimes thought of as how many hits you can take, and a more muscular person could take more hits, but is weighed down by said muscle, so a faster character would have less muscle and therefore less health. This choice is also for game balancing, as a character this fast can easily do a lot of damage to their opponent before they can make one move, so making them fragile balances out this advantage. This class has +25 permanence to reflect the idea that someone who is very fast would be hard to hit with a spell, this also helps balance them by slowing down how quickly they can increase their speed. 
+
+### Moves: Still being finalized, so  the type of moves will be discussed
+Water-based moves, especially fast ones, maybe a focus on the agility spells to go even faster?
 
 
 
-## high defense class
+## High Defense Class
 
  Name: Golem Earth's protector
 
-Elmental Type: earth
+Elemental Type: earth
 
- ### Stats: Still being finalized
+ ### Stats:
 
  Health = 500 +25 = 525
 
@@ -79,25 +79,25 @@ Defense = 300 +50 = 350
 
 Alteration = 300 -25= 275
 
-Permenence = 300 
+Permanence = 300 
 
 Aggility = 300 - 50 = 250
 
- Aggitly -50, defense +50, helth +25, alteration -25
+ <!--- Agility -50, defense +50, health +25, alteration -25 --->
 
- Rationoal: The idea for this charecter is that of like a giant rock monster, they are slow and high in helth and dfense as it is hard to break rock. alteation is -25 as rocks are thought of as hard to change
+ Rationale: The idea for this character is that of a giant rock monster. They are slow and high in health and defense, as it is hard to break a thick, heavy rock, but said rock is also hard to move. Alteration is -25, as rocks are thought of as hard to change,
 
-### Moves: Still being finalized so type of moves will be disccused
-Earth bassed moves, one maybe two aleterations, esspcialy foucoing on deffense boosts. the raming two/three moves are all atacks, all except one should be hihg damafge but slower 
+### Moves: Still being finalized, so the type of moves will be discussed
+Earth-based moves, one maybe two alterations, especially focusing on defense boosts. The remaining two/three moves are all attacks, all except one should be high damage but slower 
 
 
-## high alteration class status move foucoused class
+## High Alteration Class 
 
  Name: Druid of the Swift Weeds
 
-Elmental Type: life
+Elemental Type: life
 
- ### Stats: Still being finalized
+ ### Stats: 
 
 Health = 500
 
@@ -107,26 +107,26 @@ defense = 300 - 25 = 275
 
 Alteration = 300 +50 = 350
 
-Permenence = 300 -50 = 250 
+Permanence = 300 -50 = 250 
 
 Aggility = 300 +25 = 325
 
- Altaretion +50 , defense -25, aggility +25, permence -50
+<!--- Alteration +50, defense -25, agility +25, permanence -50 --->
 
- Rationoal: Weeds pop up fast and quckly change an enimvoment hense the aggilstiy and alteration bounsues, but it isnt that hard to remove a signel weed hence the lower defense and permence, but weeds become dificult to remove once they are given time to grow, so the oppnet needs to stop the player before their sleff bosting status moves make the Druid unstopible.
+ Rationale: Weeds pop up fast and quickly change an environment, hence the agility and alteration bonuses. But it isn't that hard to remove a single weed, hence the lower defense and permanence. Weeds become more difficult to remove once they are given time. This same philosophy applies to playing against a Druid. If a player wants to win against a Druid, they need to stop that Druid before their self-boosting status moves make them unstoppable.
 
-### Moves: Still being finalized so type of moves will be disccused
-Life bassed moves, a weaker fast atack should eb it only attack, the rest should be status moves, the plan is they foucous on buffing themsleves, equvilent to one weed turnign to many, and then atacking the opponert
+### Moves: Still being finalized, so the type of moves will be discussed
+Life-based moves.  A fast attack should be the only attack, the rest should be status moves. The plan is that they focus on buffing themselves, equivalent to one weed turning into many, and then attacking the opponent.
 
 
 
-## high attack class
+## High Attack Class
 
  Name: Inferno the Ash Bringer
 
-Elmental Type: fire
+Elemental Type: fire
 
- ### Stats: Still being finalized
+ ### Stats: 
 
  
 Health = 500 
@@ -137,25 +137,25 @@ defense = 300 -25 = 275
 
 Alteration = 300
 
-Permenence = 300 -50 = 250
+Permanence = 300 -50 = 250
 
 Aggility = 300 +25 = 325
 
-Attack +50, aggility +25, deffense -25, permenece -50
+<!--- Attack +50, agility +25, defense -25, permanence -50 --->
 
- Rationoal: fire is incredbily damigng and spread quickly hense the attack and aggilty boosts, but it cahnges easily bassed on what its bruning and or the winds. Addtiaonly some fires are easy to put otu wiht watter(well not oil fires), or if its small enough you can somther it, so its defense is low for that reason
+ Rationale: Fire is incredibly damaging and spreads quickly, hence the attack and agility boosts. But it changes easily based on what it's burning and/or the winds, which is where its low permanence comes in. Additionally, some fires are easy to put out with water (well, not oil fires), or if it's small enough, you can smother it, so its defense is low for that reason
 
-### Moves: Still being finalized so type of moves will be disccused
-Fire bassed moves, either full half and half with stauts and atack, or just one status, I do kinda like the idea of half and hlaf though as while fire alone is danmgerous, its even more of a threat if it has time to spread though the whole forest.
+### Moves: Still being finalized, so the type of moves will be discussed
+Fire-based moves, either full half and half with status and attack, or just one status. I do kinda like the idea of half and half, though, as while fire alone is dangerous, it's even more of a threat if it has time to spread through the whole forest.
 
 
 ## High Health
 
  Name: Seraphin of Purification
 
-Elmental Type: light
+Elemental Type: light
 
- ### Stats: Still 
+ ### Stats:  
 
  Health = 500 + 50 = 550
 
@@ -165,24 +165,24 @@ defense = 300
 
 Alteration = 300 +25 = 325
 
-Permenence = 300 -50 = 250
+Permanence  = 300 -50 = 250
 
 Aggility = 300
 
- HP +50, alteration +25, permence -50, attack -25 
+<!--- HP +50, alteration +25, permanence -50, attack -25 -->
 
- Rationoal: Light is realy hard to get rid of, most things in life you can get rid of decintly easilty weather that be by breaking or burning, but with light any change you do to it just chanegs itws wavelnthg into a difrent form of light like UV or IR, hence the high health. This is also why altearation is +25 and permence is -50, to replicat the idea of light chanign wavlenthg. attack is -25 as a single ray of light isnt going to do much damage, but stay in the sun to long and then you will have a problem
+ Rationale: Light is really hard to get rid of in comparison to most things in life, those you can get rid of decently easily, whether that be by breaking or burning, but with light, any change you do to it just changes its wavelength into a different form of light, like UV or IR. This difficulty in destroying light is why it has high health. This is also why alteration is +25 and permanence is -50, to replicate the idea of light changing wavelength. Attack is -25, as a single ray of light isn't going to do much damage, but staying in the sun too long, and then you will start to burn.
 
-### Moves: Still being finalized so type of moves will be disccused
-Maybe more status move foucoused, at least one atack.
+### Moves: Still being finalized, so the type of moves will be discussed
+Maybe more status move-focused, with at least one attack.
 
 
 
-## High permenece
+## High Permanence 
 
- Name: Abysial Trickerster
+ Name: Abyssal Trickster
 
-Elmental Type: dark
+Elemental Type: Dark
 
  ### Stats: Still being finalized
 
@@ -194,15 +194,15 @@ defense = 300 - 50 = 250
 
 Alteration = 300 + 25 = 325
 
-Permenence = 300 +50 = 350
+Permanence = 300 +50 = 350
 
 Aggility = 300
 
-  permence +50, alteration +25, deffense -50, attack -25
+ <!-- Permanence  +50, alteration +25, defense -50, attack -25 -->
 
- Rationoal: You can never truly git rid of darkness, its quite prement, objects are always casting shadows in most sitatuions and undergorund its awlays dark, so is space more or less. For that reason permence is +50 as no matter how had you try to change the darkness wiht light, there will always be some. Aleratoin is +25 as darkness is a great modifyer in the real world, well visualy at least, being able to cahnge presvced colors or make certain details flat out ivisible. defense is -50 as while all darkness cant bute fully removed, its very easy to remove a single spot of darkness wiht light. attack is -25 for a similar reasion to light, being in the cold darkness of the night wont hurt you imdeadtily, but it can if you stay out there to long.
+ Rationale: You can never truly git rid of darkness, it's quite permanent. Objects are always casting shadows in most situations, and underground it's always dark, so is space, more or less. For that reason, permanence is +50, as no matter how hard you try to change the darkness with light, there will always be some left. Alteration is +25, as darkness is a great modifier in the real world, well, visually at least, being able to change perceived colors or make certain details flat-out invisible. Defense is -50, as while all darkness can't be fully removed, it's very easy to remove a single spot of darkness with light. Attack is -25 for a similar reason to light, as being in the cold darkness of the night won't hurt you immediately, but it can if you stay out there too long.
 
-### Moves: Still being finalized so type of moves will be disccused
-status moves forucins on reducing opoonets stats, at least one attack
+### Moves: Still being finalized, so the type of moves will be discussed
+Status moves focusing on reducing opponents' stats, at least one attack
 
 
