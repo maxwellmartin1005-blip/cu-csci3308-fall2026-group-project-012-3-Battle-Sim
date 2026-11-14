@@ -80,12 +80,47 @@ function calculateDamage(p1fighter, p1move, p2fighter){
 * 
 * @param p1fighter player one's fighter stats
 * @param alter player one move's base alter value
+* @param element player one move's element
 * @param p2fighter player two's fighter stats 
 * @return the stat change
 */
-function calculateStatChange(p1fighter, alter, p2fighter){
+function calculateStatChange(p1fighter, alter, element, p2fighter){
     const alteration = p1fighter.alteration;
     const permanence = p2fighter.permanence;
-    const effectiveness = getEffectiveness(p1move.element, p2fighter.element);
+    const effectiveness = getEffectiveness(element, p2fighter.element);
     return (alter * alteration * effectiveness) / permanence;
+}
+
+/*
+ * Performs player 1's move against player 2
+ * 
+ * @param p1fighter player one's fighter stats
+ * @param p1move player one's move
+ * @param p2fighter player two's fighter stats
+ */
+function executeMove(p1fighter, p1move, p2fighter){
+    // Calculate and apply damage
+    const damage = calculateDamage(p1fighter, p1move, p2fighter);
+    p2fighter.health = Math.max(p2fighter.health - damage, 0);
+
+    // Calculate and apply opponent stat changes
+    for (const [stat, alter] of Object.entries(p1move.opponentStats)){
+        if (alter != 0){
+            const change = calculateStatChange(p1fighter, alter, p1move.element, p2fighter);
+            p2fighter[stat] += change;
+        }
+    }
+    // Calculate and apply self stat changes
+    for (const [stat, alter] of Object.entries(p1move.selfStats)){
+        if (alter != 0){
+            const change = calculateStatChange(p1fighter, alter, p1move.element, p1fighter);
+            // Healing stat calculations
+            if (stat == "healing"){
+                p1fighter.health += change;
+            }
+            else {
+                p1fighter[stat] += change;
+            }
+        }
+    }
 }
