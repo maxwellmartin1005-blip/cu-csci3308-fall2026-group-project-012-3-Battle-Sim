@@ -129,10 +129,10 @@ app.get('/battleResults', (req, res) => {
 });
 
 app.get('/battle', async(req, res) => {
-  // Uncomment this line for testing purposes
+  // Uncomment this line to get a fighter from database
   // const userFighter = await getFighter(0, db)
 
-  res.render('pages/battle', {userFighter: userFighter})
+  res.render('pages/battle')
 });
 
 module.exports = app;
