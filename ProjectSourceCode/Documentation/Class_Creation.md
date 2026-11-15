@@ -156,6 +156,12 @@ Aggility = 300 +25 = 325
  Rationale: Fire is incredibly damaging and spreads quickly, hence the attack and agility boosts. But it changes easily based on what it's burning and/or the winds, which is where its low permanence comes in. Additionally, some fires are easy to put out with water (well, not oil fires), or if it's small enough, you can smother it, so its defense is low for that reason
 
 ### Moves: Still being finalized, so the type of moves will be discussed
+
+* Fire Jab(Quick Attack, Fire)
+* Blind(Nomral Attack, light)
+* Flaming Spin Kick(Long Attack, Fire)
+* Flame On(Long Alteration, Fire)
+
 Fire-based moves, either full half and half with status and attack, or just one status. I do kinda like the idea of half and half, though, as while fire alone is dangerous, it's even more of a threat if it has time to spread through the whole forest.
 
 
@@ -184,7 +190,11 @@ Aggility = 300
  Rationale: Light is really hard to get rid of in comparison to most things in life, those you can get rid of decently easily, whether that be by breaking or burning, but with light, any change you do to it just changes its wavelength into a different form of light, like UV or IR. This difficulty in destroying light is why it has high health. This is also why alteration is +25 and permanence is -50, to replicate the idea of light changing wavelength. Attack is -25, as a single ray of light isn't going to do much damage, but staying in the sun too long, and then you will start to burn.
 
 ### Moves: Still being finalized, so the type of moves will be discussed
-Maybe more status move-focused, with at least one attack.
+
+* Blind(Nomral Attack, Light)
+* Divine Judgement(Long Atack, Light)
+* Glow Up(Normal Alteration, Light)
+* Restraining Order(Long Alteration, Light)
 
 
 
@@ -215,4 +225,8 @@ Aggility = 300
 ### Moves: Still being finalized, so the type of moves will be discussed
 Status moves focusing on reducing opponents' stats, at least one attack
 
+* Shadow Strike(Long Attack, Dark)
+* Got Your Nose(Normal Alteration, Dark)
+* Manipulate(Long Alteration, Dark)
+* Get Dirty(Normal Alteration, Earth)
 

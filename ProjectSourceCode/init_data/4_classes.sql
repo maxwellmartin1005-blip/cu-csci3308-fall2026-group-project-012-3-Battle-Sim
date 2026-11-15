@@ -39,19 +39,35 @@ INSERT INTO fighters (creator_id, name , health, attack, defense, alteration, pe
 VALUES (0, 'Druid of the Swift Weeds', 500, 300, 275, 350, 250, 325, 'life')
 ;
 
-Total Peace(Long Alteration, Life)
-Get Dirty(Normal Alteration, Earth)
-Healing(Normal Alteration, Life)
-Sprout(Quick Atack, Life)
+-- Total Peace(Long Alteration, Life)
+-- Get Dirty(Normal Alteration, Earth)
+-- Healing(Normal Alteration, Life)
+-- Sprout(Quick Atack, Life)
 
 INSERT INTO fighters (creator_id, name , health, attack, defense, alteration, permanence, agility, element) 
 VALUES (0, 'Inferno the Ash Bringer', 500, 350, 275, 300, 250, 325, 'fire')
 ;
 
+-- Fire Jab(Quick Attack, Fire)
+-- Blind(Nomral Attack, Light)
+-- Flaming Spin Kick(Long Attack, Fire)
+-- Flame On(Long Alteration, Fire)
+
+
 INSERT INTO fighters (creator_id, name , health, attack, defense, alteration, permanence, agility, element) 
 VALUES (0, 'Seraphin of Purification', 550, 275, 300, 325, 250, 300, 'light')
 ;
 
+-- Blind(Nomral Attack, Light)
+-- Divine Judgement(Long Atack, Light)
+-- Glow Up(Normal Alteration, Light)
+-- Restraining Order(Long Alteration, Light)
+
 INSERT INTO fighters (creator_id, name , health, attack, defense, alteration, permanence, agility, element) 
 VALUES (0, 'Abyssal Trickster', 500, 275, 250, 325, 350, 300, 'dark')
 returning *;
+
+-- Shadow Strike(Long Attack, Dark)
+-- Got Your Nose(Normal Alteration, Dark)
+-- Manipulate(Long Alteration, Dark)
+-- Get Dirty(Normal Alteration, Earth)
