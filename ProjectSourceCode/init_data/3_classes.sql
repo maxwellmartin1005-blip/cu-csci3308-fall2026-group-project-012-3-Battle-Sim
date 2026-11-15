@@ -10,6 +10,7 @@ INSERT INTO moves_to_fighters  (fighter_id, move_id) VALUES (1,31)returning *;
 --query to make sure everything was created correctly
 SELECT moves.name FROM moves_to_fighters JOIN moves ON moves.id= moves_to_fighters.move_id JOIN fighters ON moves_to_fighters.fighter_id=fighters.id  WHERE fighters.id =1;
 
+-- DO NOT UNCOMMENT, STILL IN DEVELOPMENT
 --INSERT INTO fighters (creator_id, name , health, attack, defense, alteration, permanence, agility, element) 
 --VALUES (0, 'Speedster the Living Rapid', 475, 300, 250, 300, 325, 350, 'water')
 --;
