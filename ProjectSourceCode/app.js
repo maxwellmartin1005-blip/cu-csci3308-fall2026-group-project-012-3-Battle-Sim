@@ -15,6 +15,7 @@ const multer = require('multer');
 const {elements, maxImageSize, validateFighter} = require('./validateFighter');
 const bcrypt = require('bcryptjs'); //  To hash passwords
 const axios = require('axios'); // To make HTTP requests from our server. We'll learn more about it in Part C.
+const getFighter = require('./props/getFighter');
 
 // *****************************************************
 // <!-- Section 2 : Connect to DB -->
@@ -243,7 +244,11 @@ app.get('/battleResults', (req, res) => {
     loser: isVictory ? 'Fighter B' : 'Fighter A',
   });
 });
-app.get('/battle', (req, res) => {
+
+app.get('/battle', async(req, res) => {
+  // Uncomment this line to get a fighter from database
+  // const userFighter = await getFighter(0, db)
+
   res.render('pages/battle')
 });
 
