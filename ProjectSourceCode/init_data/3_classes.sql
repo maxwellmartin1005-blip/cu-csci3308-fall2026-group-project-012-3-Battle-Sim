@@ -1,7 +1,3 @@
-/* I needed a user to create the classes with so that would have a creator_id*/
-
-INSERT INTO users (id, username, password_hash,email) VALUES (0, 'admin', '$2a$10$6ocV87OneRLGOAiyEpwXE.vn4skhxeiuIp0yZyddkqvgvbC/BNuQ.','admin@admin.com') returning *;
-
 INSERT INTO fighters (creator_id, name , health, attack, defense, alteration, permanence, agility, element) 
 VALUES (0, 'The Generic One, Master of None', 500, 300, 300, 300, 300, 300, 'fire')
 returning *;
