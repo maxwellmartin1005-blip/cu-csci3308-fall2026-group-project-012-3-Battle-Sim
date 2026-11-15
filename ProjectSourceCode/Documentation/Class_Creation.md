@@ -24,13 +24,10 @@ Aggility = 300
 ### Moves: 
 
 
-fire jab
-
-Fire Punch
-
-Hype
-
-Flame On
+* Fire Jab(Quick Attack, Fire)
+* Fire Punch(Normal Attack, Fire)
+* Hype(Quick Alteration, Fire)
+* Flame On(Long Alteration, Fire)
 
  ## High Speed Class
 
@@ -61,6 +58,11 @@ Aggility = 300 + 50 = 350
 ### Moves: Still being finalized, so  the type of moves will be discussed
 Water-based moves, especially fast ones, maybe a focus on the agility spells to go even faster?
 
+* Ripple(quick attack, Water)
+* Soft and Wet(Long Alteration, Water)
+* Focus (short Alteration, Water)
+* Tsunami(Long Atack, Water)
+
 
 
 ## High Defense Class
@@ -90,6 +92,10 @@ Aggility = 300 - 50 = 250
 ### Moves: Still being finalized, so the type of moves will be discussed
 Earth-based moves, one maybe two alterations, especially focusing on defense boosts. The remaining two/three moves are all attacks, all except one should be high damage but slower 
 
+* Pebble Toss(Quick Attack, Earth)
+* Intimidate(Quick Alteration, Earth)
+* Boulder Bash(Long Atack, Earth)
+* Bulk Up(Long Alteration, Earth)
 
 ## High Alteration Class 
 
@@ -118,6 +124,10 @@ Aggility = 300 +25 = 325
 ### Moves: Still being finalized, so the type of moves will be discussed
 Life-based moves.  A fast attack should be the only attack, the rest should be status moves. The plan is that they focus on buffing themselves, equivalent to one weed turning into many, and then attacking the opponent.
 
+* Total Peace(Long Alteration, Life)
+* Get Dirty(Normal Alteration, Earth)
+* Healing(Normal Alteration, Life)
+* Sprout(Quick Atack, Life)
 
 
 ## High Attack Class
