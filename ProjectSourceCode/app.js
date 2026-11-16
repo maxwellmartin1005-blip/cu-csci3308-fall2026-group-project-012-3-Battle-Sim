@@ -167,12 +167,25 @@ app.post('/login', async (req, res) => {
   }
 });
 
-app.get('/characterSelect', (req,res) => {
+app.get('/characterSelect', async (req, res) => {
   if (!req.session.user) {
     return res.redirect('/login');
   }
 
-  res.render('pages/characterSelect');
+  try {
+    const fighters = await db.any(
+      `SELECT f.id, f.name, f.element
+       FROM fighters f
+       WHERE f.creator_id = 0
+          OR f.id IN (SELECT fighter_id FROM users_to_fighters WHERE user_id = $1)
+       ORDER BY f.id`,
+      [req.session.user.id]
+    );
+    res.render('pages/characterSelect', { fighters });
+  } catch (err) {
+    console.log(err);
+    res.render('pages/characterSelect', { fighters: [], message: 'Could not load fighters.' });
+  }
 });
 
 app.get('/createFighter', (req, res) => {
