@@ -7,7 +7,8 @@
 
     <section class="home-page__welcome">
         <h2 id="home-title">Welcome, {{username}}!</h2>
-        <button class="home-page__play" type="button" disabled>Play</button>
-        <p class="text-muted">Play is a placeholder while game navigation is being connected.</p>
+        <form action="/characterSelect" method="GET">
+            <button class="home-page__play" type="submit">Play</button>
+        </form>
     </section>
 </main>
