@@ -36,12 +36,12 @@ async function validateFighter(input, image, availableMoves) {
   const selectedMoves = input.moves || [];
   const moveIds = Array.isArray(selectedMoves) ? selectedMoves : [selectedMoves];
   const availableMoveIds = new Set(availableMoves.map(move => String(move.id)));
-  const hasMoves = moveIds.length > 0;
+  const hasFourMoves = moveIds.length === 4;
   const hasDuplicateMoves = new Set(moveIds).size !== moveIds.length;
   const hasUnknownMoves = moveIds.some(id => !availableMoveIds.has(id));
 
-  if (!hasMoves || hasDuplicateMoves || hasUnknownMoves) {
-    errors.push('Choose at least one available move.');
+  if (!hasFourMoves || hasDuplicateMoves || hasUnknownMoves) {
+    errors.push('Choose exactly four different available moves.');
   }
 
   const imageError = await validateImage(image);
