@@ -13,6 +13,7 @@ const {randomBytes} = require('node:crypto');
 const session = require('express-session'); // To set the session object. To store or access session data, use the `req.session`, which is (generally) serialized as JSON by the store.
 const bcrypt = require('bcryptjs'); //  To hash passwords
 const axios = require('axios'); // To make HTTP requests from our server. We'll learn more about it in Part C.
+const getFighter = require('./props/getFighter');
 
 // *****************************************************
 // <!-- Section 2 : Connect to DB -->
@@ -167,6 +168,10 @@ app.post('/login', async (req, res) => {
 });
 
 app.get('/characterSelect', (req,res) => {
+  if (!req.session.user) {
+    return res.redirect('/login');
+  }
+
   res.render('pages/characterSelect');
 });
 
@@ -189,7 +194,11 @@ app.get('/battleResults', (req, res) => {
     loser: isVictory ? 'Fighter B' : 'Fighter A',
   });
 });
-app.get('/battle', (req, res) => {
+
+app.get('/battle', async(req, res) => {
+  // Uncomment this line to get a fighter from database
+  // const userFighter = await getFighter(0, db)
+
   res.render('pages/battle')
 });
 
