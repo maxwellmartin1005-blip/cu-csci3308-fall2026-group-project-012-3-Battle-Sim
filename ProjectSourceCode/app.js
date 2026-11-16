@@ -168,6 +168,10 @@ app.post('/login', async (req, res) => {
 });
 
 app.get('/characterSelect', (req,res) => {
+  if (!req.session.user) {
+    return res.redirect('/login');
+  }
+
   res.render('pages/characterSelect');
 });
 
