@@ -131,13 +131,10 @@ describe('Saving a fighter transaction', () => {
       await db.none(`CREATE TRIGGER ${triggerName} BEFORE INSERT ON moves_to_fighters
         FOR EACH ROW WHEN (NEW.move_id = ${Number(moveIds[3])})
         EXECUTE FUNCTION ${functionName}()`);
-      try {
-        await assert.rejects(saveFighter(user, input(), image, startingStats), /forced final move failure/);
-        assert.deepEqual(await db.one(countsQuery), before);
-      } finally {
-        await db.none(`DROP TRIGGER ${triggerName} ON moves_to_fighters`);
-      }
+      await assert.rejects(saveFighter(user, input(), image, startingStats), /forced final move failure/);
+      assert.deepEqual(await db.one(countsQuery), before);
     } finally {
+      await db.none(`DROP TRIGGER IF EXISTS ${triggerName} ON moves_to_fighters`);
       await db.none(`DROP FUNCTION ${functionName}()`);
     }
   });

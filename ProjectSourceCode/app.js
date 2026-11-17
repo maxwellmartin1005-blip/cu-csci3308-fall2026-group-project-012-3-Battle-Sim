@@ -211,7 +211,9 @@ app.get('/createFighter', requireLogin, async (req, res, next) => {
          WHERE f.id::text = $1 AND owned.user_id = $2`,
         [req.query.saved, req.session.user.id]
       );
-      if (fighter) message = 'Fighter saved: ' + fighter.name;
+      if (fighter) {
+        message = 'Fighter saved: ' + fighter.name;
+      }
     }
     res.render('pages/createFighter', {...form, message});
   } catch (error) {
@@ -231,8 +233,12 @@ app.post('/createFighter', requireLogin, fighterUpload.single('fighterImage'), a
     const fighter = await saveFighter(req.session.user, req.body, req.file, startingStats);
     return res.redirect('/createFighter?saved=' + fighter.id);
   } catch (error) {
-    if (!form) return next(error);
-    if (!error.errors) console.error('Could not save fighter:', error.message);
+    if (!form) {
+      return next(error);
+    }
+    if (!error.errors) {
+      console.error('Could not save fighter:', error.message);
+    }
     return res.status(error.status || 500).render('pages/createFighter', {
       ...form,
       errors: error.errors || ['Could not save your fighter. Please try again.'],
