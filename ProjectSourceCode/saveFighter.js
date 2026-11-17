@@ -6,7 +6,7 @@ async function saveFighter(user, input, image, startingStats) {
     throw new Error('Sign in before saving a fighter.');
   }
 
-  // The template-selection step must supply these; do not use zero defaults.
+  // Starting stats come from the server, never from form fields or zero defaults.
   const statNames = ['health', 'attack', 'defense', 'alteration', 'permanence', 'agility'];
   if (!startingStats || statNames.some(name => !Number.isInteger(startingStats[name]))) {
     throw new Error('Provide starting stats before saving a fighter.');
@@ -15,7 +15,10 @@ async function saveFighter(user, input, image, startingStats) {
   const availableMoves = await db.any('SELECT id FROM moves');
   const errors = await validateFighter(input, image, availableMoves);
   if (errors.length) {
-    throw new Error(errors.join(' '));
+    const error = new Error(errors.join(' '));
+    error.status = 400;
+    error.errors = errors;
+    throw error;
   }
 
   return db.tx(async transaction => {

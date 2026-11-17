@@ -1,6 +1,6 @@
 <main class="create-fighter-page">
     <h2>Create Fighter</h2>
-    <p class="text-muted">Preview: check your fighter details. Saving is not available yet.</p>
+    <p class="text-muted">Create a fighter with your own name, image, element, and four moves.</p>
 
     {{#if errors}}
     <div class="alert alert-danger" role="alert">
@@ -9,11 +9,14 @@
             <li>{{this}}</li>
             {{/each}}
         </ul>
-        <p class="mb-0 mt-2">Choose your image again before checking the form.</p>
+        <p class="mb-0 mt-2">Choose your image again before saving.</p>
     </div>
     {{/if}}
     {{#if message}}
-    <p class="alert alert-success" role="status">{{message}}</p>
+    <div class="alert alert-success" role="status">
+        <p class="mb-1">{{message}}</p>
+        <a href="/characterSelect">Choose a fighter</a>
+    </div>
     {{/if}}
 
     <form action="/createFighter" method="POST" enctype="multipart/form-data">
@@ -50,7 +53,7 @@
                 {{/each}}
             </div>
         </fieldset>
-        <button type="submit">Check fighter</button>
+        <button type="submit">Save Fighter</button>
         <a class="ms-3" href="/characterSelect">Cancel</a>
     </form>
 </main>

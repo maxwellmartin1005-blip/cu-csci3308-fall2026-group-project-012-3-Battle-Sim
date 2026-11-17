@@ -12,7 +12,8 @@ const bodyParser = require('body-parser');
 const {randomBytes} = require('node:crypto');
 const session = require('express-session'); // To set the session object. To store or access session data, use the `req.session`, which is (generally) serialized as JSON by the store.
 const multer = require('multer');
-const {elements, maxImageSize, validateFighter} = require('./validateFighter');
+const {elements, maxImageSize} = require('./validateFighter');
+const saveFighter = require('./saveFighter');
 const bcrypt = require('bcryptjs'); //  To hash passwords
 const axios = require('axios'); // To make HTTP requests from our server. We'll learn more about it in Part C.
 const getFighter = require('./props/getFighter');
@@ -201,25 +202,41 @@ async function getFighterFormData(input = {}) {
 
 app.get('/createFighter', requireLogin, async (req, res, next) => {
   try {
-    res.render('pages/createFighter', await getFighterFormData());
+    const form = await getFighterFormData();
+    let message;
+    if (typeof req.query.saved === 'string') {
+      const fighter = await db.oneOrNone(
+        `SELECT f.name FROM fighters f
+         JOIN users_to_fighters owned ON owned.fighter_id = f.id
+         WHERE f.id::text = $1 AND owned.user_id = $2`,
+        [req.query.saved, req.session.user.id]
+      );
+      if (fighter) message = 'Fighter saved: ' + fighter.name;
+    }
+    res.render('pages/createFighter', {...form, message});
   } catch (error) {
     next(error);
   }
 });
 
 app.post('/createFighter', requireLogin, fighterUpload.single('fighterImage'), async (req, res, next) => {
+  let form;
   try {
-    const form = await getFighterFormData(req.body);
-    const errors = await validateFighter(req.body, req.file, form.moves);
-    if (errors.length) {
-      return res.status(400).render('pages/createFighter', {...form, errors});
-    }
-    return res.render('pages/createFighter', {
-      ...form,
-      message: 'Fighter details look good. Saving is not available yet.',
-    });
+    form = await getFighterFormData(req.body);
+    // Use the generic starter's baseline until template selection is added.
+    const startingStats = await db.one(
+      `SELECT health, attack, defense, alteration, permanence, agility
+       FROM fighters WHERE creator_id = 0 ORDER BY id LIMIT 1`
+    );
+    const fighter = await saveFighter(req.session.user, req.body, req.file, startingStats);
+    return res.redirect('/createFighter?saved=' + fighter.id);
   } catch (error) {
-    next(error);
+    if (!form) return next(error);
+    if (!error.errors) console.error('Could not save fighter:', error.message);
+    return res.status(error.status || 500).render('pages/createFighter', {
+      ...form,
+      errors: error.errors || ['Could not save your fighter. Please try again.'],
+    });
   }
 });
 
