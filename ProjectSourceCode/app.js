@@ -177,6 +177,7 @@ app.get('/characterSelect', async (req, res) => {
       `SELECT f.id, f.name, f.element
        FROM fighters f
        WHERE f.creator_id = 0
+          OR f.creator_id = $1
           OR f.id IN (SELECT fighter_id FROM users_to_fighters WHERE user_id = $1)
        ORDER BY f.id`,
       [req.session.user.id]
