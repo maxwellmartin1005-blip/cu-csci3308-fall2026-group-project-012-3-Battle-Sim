@@ -11,7 +11,7 @@ INSERT INTO moves_to_fighters  (fighter_id, move_id) VALUES (1,19);
 INSERT INTO moves_to_fighters  (fighter_id, move_id) VALUES (1,31);
 
 
--- DO NOT UNCOMMENT, STILL IN DEVELOPMENT
+
 INSERT INTO fighters (creator_id, name , health, attack, defense, alteration, permanence, agility, element) 
 VALUES (0, 'Speedster the Living Rapid', 475, 300, 250, 300, 325, 350, 'water')
 ;
