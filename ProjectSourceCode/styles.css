@@ -207,3 +207,31 @@ body:has(.home-page) {
         margin-top: 3rem;
     }
 }
+
+body:has(.create-fighter-page) {
+    overflow: auto;
+}
+
+.create-fighter-page {
+    max-width: 48rem;
+    margin: 2rem auto;
+    padding: 0 1rem 2rem;
+}
+
+.create-fighter-page__image {
+    max-width: 10rem;
+    max-height: 10rem;
+    margin-top: 0.5rem;
+}
+
+.create-fighter-page__moves {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr));
+    gap: 0.5rem;
+}
+
+.create-fighter-page__move {
+    display: flex;
+    align-items: baseline;
+    gap: 0.5rem;
+}
