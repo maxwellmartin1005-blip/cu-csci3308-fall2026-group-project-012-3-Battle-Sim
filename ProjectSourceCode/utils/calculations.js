@@ -116,7 +116,7 @@ function executeMove(p1fighter, p1move, p2fighter){
             const change = calculateStatChange(p1fighter, alter, p1move.element, p1fighter);
             // Healing stat calculations
             if (stat == "healing"){
-                p1fighter.health += change;
+                p1fighter.health += Math.min(p1fighter.health + change, p1fighter.maxHealth);
             }
             else {
                 p1fighter[stat] += change;
