@@ -7,6 +7,9 @@
     <div class="row-container">
         {{#each fighters}}
         <div class="fighter-card" data-id="{{this.id}}">
+            {{#if this.image}}
+            <img src="{{this.image}}" alt="{{this.name}}">
+            {{/if}}
             <p>{{this.name}}</p>
             <p>{{this.element}}</p>
             <p class="hidden-text">Selected</p>

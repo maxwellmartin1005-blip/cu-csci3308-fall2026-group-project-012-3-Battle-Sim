@@ -174,7 +174,7 @@ app.get('/characterSelect', async (req, res) => {
 
   try {
     const fighters = await db.any(
-      `SELECT f.id, f.name, f.element
+      `SELECT f.id, f.name, f.element, f.image
        FROM fighters f
        WHERE f.creator_id = 0
           OR f.creator_id = $1
