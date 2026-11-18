@@ -16,6 +16,8 @@ describe('Fighter creation form and saving', () => {
   const fighterName = 'Preview ' + randomUUID();
   const password = 'FighterPreview123!';
   const moveIds = [];
+  let templateId;
+  const templateStats = {health: 475, attack: 300, defense: 250, alteration: 300, permanence: 325, agility: 350};
   let agent;
 
   before(async () => {
@@ -31,10 +33,21 @@ describe('Fighter creation form and saving', () => {
         ['Test move ' + username + ' ' + index]);
       moveIds.push(move.id);
     }
+    const template = await db.one(
+      `INSERT INTO fighters (creator_id, name, element, health, attack, defense, alteration, permanence, agility)
+       VALUES (0, $1, 'fire', $2, $3, $4, $5, $6, $7) RETURNING id`,
+      ['Class ' + username, ...Object.values(templateStats)]
+    );
+    templateId = template.id;
+    for (const id of moveIds.slice(0, 4)) {
+      await db.none('INSERT INTO moves_to_fighters (fighter_id, move_id) VALUES ($1, $2)', [templateId, id]);
+    }
   });
 
   after(async () => {
     if (process.env.NODE_ENV === 'test' && process.env.POSTGRES_DB?.endsWith('_test')) {
+      await db.none('DELETE FROM moves_to_fighters WHERE fighter_id = $1', [templateId]);
+      await db.none('DELETE FROM fighters WHERE id = $1', [templateId]);
       await db.none('DELETE FROM moves WHERE id = ANY($1::int[])', [moveIds]);
       await db.none('DELETE FROM users WHERE username = $1', [username]);
     }
@@ -59,7 +72,7 @@ describe('Fighter creation form and saving', () => {
   }
 
   function submit(overrides = {}, data = image, imageType = 'image/png') {
-    const fields = {fighterName, element: 'fire', moves: moveIds.slice(0, 4).map(String), ...overrides};
+    const fields = {fighterName, templateId: String(templateId), element: 'fire', moves: moveIds.slice(0, 4).map(String), ...overrides};
     let request = agent.post('/createFighter').redirects(0);
     for (const [name, value] of Object.entries(fields)) {
       request = request.field(name, value);
@@ -75,12 +88,13 @@ describe('Fighter creation form and saving', () => {
     expect(res).to.have.status(200);
     expect(res.text).to.include('value="' + moveIds[0] + '"');
     expect(res.text).to.include('Test move ' + username);
-    expect(res.text).to.include('value="dark"');
+    expect(res.text).to.include('name="templateId"');
+    expect(res.text).to.include('data-moves="' + moveIds.slice(0, 4).join(',') + '"');
     expect(res.text).to.include('Save Fighter');
     expect(res.text).not.to.include('value="quickHit"');
   });
 
-  it('saves exactly one fighter, its image, owner, baseline stats and four moves through HTTP', async () => {
+  it('saves exactly one fighter, its image, owner, selected class stats and four moves through HTTP', async () => {
     const res = await submit();
     expect(res).to.have.status(302);
     expect(res.headers.location).to.match(/^\/createFighter\?saved=\d+$/);
@@ -91,9 +105,9 @@ describe('Fighter creation form and saving', () => {
     expect(fighter.creator_id).to.equal(user.id);
     expect(fighter.element).to.equal('fire');
     expect(fighter.image).to.deep.equal(image);
-    const baseline = await db.one(`SELECT health, attack, defense, alteration, permanence, agility
-      FROM fighters WHERE creator_id = 0 ORDER BY id LIMIT 1`);
-    for (const [name, value] of Object.entries(baseline)) expect(fighter[name]).to.equal(value);
+    for (const [name, value] of Object.entries(templateStats)) {
+      expect(fighter[name]).to.equal(value);
+    }
     const owners = await db.any('SELECT user_id FROM users_to_fighters WHERE fighter_id = $1', [fighter.id]);
     expect(owners).to.deep.equal([{user_id: user.id}]);
     const moves = await db.map('SELECT move_id FROM moves_to_fighters WHERE fighter_id = $1 ORDER BY move_id',
@@ -109,16 +123,16 @@ describe('Fighter creation form and saving', () => {
     expect(afterRefresh).to.have.lengthOf(1);
   });
 
-  it('ignores form owner/stat values while keeping the chosen element', async () => {
+  it('ignores form owner/stat values and uses the selected class element', async () => {
     const res = await submit({creator_id: '0', user_id: '0', health: '999999', attack: '999999', element: 'water'});
     expect(res).to.have.status(302);
     const fighter = await db.one('SELECT creator_id, health, attack, element FROM fighters WHERE name = $1', [fighterName]);
     const user = await db.one('SELECT id FROM users WHERE username = $1', [username]);
-    const baseline = await db.one('SELECT health, attack FROM fighters WHERE creator_id = 0 ORDER BY id LIMIT 1');
+    const baseline = templateStats;
     expect(fighter.creator_id).to.equal(user.id);
     expect(fighter.health).to.equal(baseline.health);
     expect(fighter.attack).to.equal(baseline.attack);
-    expect(fighter.element).to.equal('water');
+    expect(fighter.element).to.equal('fire');
   });
 
   it('shows confirmation only for a fighter owned by the signed-in user', async () => {
@@ -133,7 +147,7 @@ describe('Fighter creation form and saving', () => {
   for (const testCase of [
     {name: 'a blank name', input: {fighterName: '   '}, message: 'Enter a fighter name'},
     {name: 'a name longer than 255 characters', input: {fighterName: 'x'.repeat(256)}, message: 'Enter a fighter name'},
-    {name: 'an invalid element', input: {element: 'lava'}, message: 'Choose one of the six elements.'},
+    {name: 'an invalid class', input: {templateId: '999999999'}, message: 'Choose an available class.'},
     {name: 'no selected moves', input: {moves: ''}, message: 'Choose exactly four different available moves.'},
   ]) {
     it('rejects ' + testCase.name, async () => {
@@ -199,7 +213,8 @@ describe('Fighter creation form and saving', () => {
     expect(res).to.have.status(400);
     await expectNoFighterSaved();
     expect(res.text).to.include('value="' + fighterName + '"');
-    expect(res.text).to.include('value="water" selected');
+    expect(res.text).to.include('value="' + templateId + '" selected');
+    expect(res.text).to.include('name="element" value="fire" readonly');
     for (const id of moveIds.slice(0, 4)) {
       expect(res.text).to.include('value="' + id + '" checked');
     }

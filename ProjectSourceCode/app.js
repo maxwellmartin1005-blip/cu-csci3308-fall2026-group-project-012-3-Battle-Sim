@@ -12,7 +12,8 @@ const bodyParser = require('body-parser');
 const {randomBytes} = require('node:crypto');
 const session = require('express-session'); // To set the session object. To store or access session data, use the `req.session`, which is (generally) serialized as JSON by the store.
 const multer = require('multer');
-const {elements, maxImageSize} = require('./validateFighter');
+const {maxImageSize} = require('./validateFighter');
+const {getFighterTemplates, getAllowedMoves} = require('./fighterTemplates');
 const saveFighter = require('./saveFighter');
 const bcrypt = require('bcryptjs'); //  To hash passwords
 const axios = require('axios'); // To make HTTP requests from our server. We'll learn more about it in Part C.
@@ -191,12 +192,17 @@ function requireLogin(req, res, next) {
 }
 
 async function getFighterFormData(input = {}) {
+  const templates = await getFighterTemplates();
+  const selectedTemplate = templates.find(item => String(item.id) === input.templateId);
   const moves = await db.any('SELECT id, name, element, type FROM moves ORDER BY element, name');
+  const allowedIds = new Set(getAllowedMoves(moves, selectedTemplate).map(move => move.id));
   const selectedMoves = Array.isArray(input.moves) ? input.moves : [input.moves];
   return {
     fighterName: typeof input.fighterName === 'string' ? input.fighterName : '',
-    elements: elements.map(value => ({value, selected: input.element === value})),
-    moves: moves.map(move => ({...move, checked: selectedMoves.includes(String(move.id))})),
+    templates: templates.map(item => ({...item, selected: item === selectedTemplate})),
+    selectedTemplate,
+    moves: moves.map(move => ({...move, allowed: allowedIds.has(move.id),
+      checked: allowedIds.has(move.id) && selectedMoves.includes(String(move.id))})),
   };
 }
 
@@ -225,12 +231,7 @@ app.post('/createFighter', requireLogin, fighterUpload.single('fighterImage'), a
   let form;
   try {
     form = await getFighterFormData(req.body);
-    // Use the generic starter's baseline until template selection is added.
-    const startingStats = await db.one(
-      `SELECT health, attack, defense, alteration, permanence, agility
-       FROM fighters WHERE creator_id = 0 ORDER BY id LIMIT 1`
-    );
-    const fighter = await saveFighter(req.session.user, req.body, req.file, startingStats);
+    const fighter = await saveFighter(req.session.user, req.body, req.file);
     return res.redirect('/createFighter?saved=' + fighter.id);
   } catch (error) {
     if (!form) {

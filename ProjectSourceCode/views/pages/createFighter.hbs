@@ -1,6 +1,6 @@
 <main class="create-fighter-page">
     <h2>Create Fighter</h2>
-    <p class="text-muted">Create a fighter with your own name, image, element, and four moves.</p>
+    <p class="text-muted">Choose a class, then add your name, image, and four moves.</p>
 
     {{#if errors}}
     <div class="alert alert-danger" role="alert">
@@ -25,27 +25,46 @@
             <input class="form-control" id="fighterName" name="fighterName" value="{{fighterName}}" maxlength="255" required>
         </div>
         <div class="mb-3">
-            <label for="element" class="form-label">Element</label>
-            <select class="form-select" id="element" name="element" required>
-                <option value="">Choose an element</option>
-                {{#each elements}}
-                <option value="{{value}}" {{#if selected}}selected{{/if}}>{{value}}</option>
+            <label for="templateId" class="form-label">Base class</label>
+            <select class="form-select" id="templateId" name="templateId" required>
+                <option value="">Choose a class</option>
+                {{#each templates}}
+                <option value="{{id}}" {{#if selected}}selected{{/if}}
+                    data-element="{{element}}" data-moves="{{defaultMoves}}"
+                    data-health="{{health}}" data-attack="{{attack}}" data-defense="{{defense}}"
+                    data-alteration="{{alteration}}" data-permanence="{{permanence}}" data-agility="{{agility}}">{{name}}</option>
                 {{/each}}
             </select>
         </div>
+        <div class="mb-3">
+            <label for="element" class="form-label">Element</label>
+            <input class="form-control" id="element" name="element" value="{{selectedTemplate.element}}" readonly>
+            <p class="form-text">Set by class.</p>
+        </div>
+        <fieldset class="mb-3">
+            <legend class="fs-5">Starting stats (read-only)</legend>
+            <div class="row">
+                <p class="col-4 mb-1">Health: <span data-stat="health">{{#if selectedTemplate}}{{selectedTemplate.health}}{{else}}—{{/if}}</span></p>
+                <p class="col-4 mb-1">Attack: <span data-stat="attack">{{#if selectedTemplate}}{{selectedTemplate.attack}}{{else}}—{{/if}}</span></p>
+                <p class="col-4 mb-1">Defense: <span data-stat="defense">{{#if selectedTemplate}}{{selectedTemplate.defense}}{{else}}—{{/if}}</span></p>
+                <p class="col-4 mb-1">Alteration: <span data-stat="alteration">{{#if selectedTemplate}}{{selectedTemplate.alteration}}{{else}}—{{/if}}</span></p>
+                <p class="col-4 mb-1">Permanence: <span data-stat="permanence">{{#if selectedTemplate}}{{selectedTemplate.permanence}}{{else}}—{{/if}}</span></p>
+                <p class="col-4 mb-1">Agility: <span data-stat="agility">{{#if selectedTemplate}}{{selectedTemplate.agility}}{{else}}—{{/if}}</span></p>
+            </div>
+        </fieldset>
         <div class="mb-3">
             <label for="fighterImage" class="form-label">Fighter image</label>
             <input class="form-control" type="file" id="fighterImage" name="fighterImage" accept="image/png,image/jpeg" aria-describedby="image-help" required>
             <p id="image-help" class="form-text">PNG or JPEG, up to 2 MB.</p>
             <img id="imagePreview" class="create-fighter-page__image" alt="Your fighter image preview" hidden>
         </div>
-        <fieldset class="mb-3">
+        <fieldset class="mb-3" id="fighterMoves" {{#unless selectedTemplate}}disabled{{/unless}}>
             <legend class="fs-5">Choose moves</legend>
-            <p class="form-text">Choose exactly four moves.</p>
+            <p class="form-text">Choose exactly four moves from your class element and its default moves.</p>
             <div class="create-fighter-page__moves">
                 {{#each moves}}
-                <label class="create-fighter-page__move">
-                    <input type="checkbox" name="moves" value="{{id}}" {{#if checked}}checked{{/if}}>
+                <label class="create-fighter-page__move" data-move-id="{{id}}" data-element="{{element}}" {{#unless allowed}}hidden{{/unless}}>
+                    <input type="checkbox" name="moves" value="{{id}}" {{#if checked}}checked{{/if}} {{#unless allowed}}disabled{{/unless}}>
                     <span>{{name}} <small class="text-muted">({{element}}, {{type}})</small></span>
                 </label>
                 {{else}}
@@ -58,24 +77,4 @@
     </form>
 </main>
 
-<script>
-  const imageInput = document.getElementById('fighterImage');
-  const preview = document.getElementById('imagePreview');
-  let previewUrl;
-
-  imageInput.addEventListener('change', () => {
-    if (previewUrl) URL.revokeObjectURL(previewUrl);
-    preview.hidden = true;
-    imageInput.setCustomValidity('');
-    const file = imageInput.files[0];
-    if (!file) return;
-    if (!['image/png', 'image/jpeg'].includes(file.type) || file.size > 2 * 1024 * 1024) {
-      imageInput.setCustomValidity('Choose a PNG or JPEG image no larger than 2 MB.');
-      imageInput.reportValidity();
-      return;
-    }
-    previewUrl = URL.createObjectURL(file);
-    preview.src = previewUrl;
-    preview.hidden = false;
-  });
-</script>
+<script src="/createFighter.js"></script>
