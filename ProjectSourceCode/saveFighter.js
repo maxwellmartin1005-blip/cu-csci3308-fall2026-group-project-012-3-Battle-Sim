@@ -1,6 +1,9 @@
 const {db} = require('./db');
 const {validateFighter} = require('./validateFighter');
 const {getFighterTemplates, getAllowedMoves} = require('./fighterTemplates');
+const {writeFile, unlink} = require('node:fs/promises');
+const path = require('node:path');
+const {randomUUID} = require('node:crypto');
 
 function validationError(errors) {
   const error = new Error(errors.join(' '));
@@ -24,31 +27,46 @@ async function saveFighter(user, input, image) {
   const errors = await validateFighter(details, image, availableMoves);
   if (errors.length) throw validationError(errors);
 
-  return db.tx(async transaction => {
-    const fighter = await transaction.one(
-      `INSERT INTO fighters
-        (creator_id, name, element, image, health, attack, defense, alteration, permanence, agility)
-       VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)
-       RETURNING id, name, element`,
-      [user.id, input.fighterName.trim(), template.element, image.buffer,
-        template.health, template.attack, template.defense,
-        template.alteration, template.permanence, template.agility]
-    );
+  const extension = image.mimetype === 'image/png' ? '.png' : '.jpg';
+  const filename = randomUUID() + extension;
+  const imageFile = path.join(__dirname, 'images', filename);
+  const imageUrl = '/images/' + filename;
+  await writeFile(imageFile, image.buffer, {flag: 'wx'});
 
-    await transaction.none(
-      'INSERT INTO users_to_fighters (user_id, fighter_id) VALUES ($1, $2)',
-      [user.id, fighter.id]
-    );
-
-    for (const moveId of input.moves) {
-      await transaction.none(
-        'INSERT INTO moves_to_fighters (move_id, fighter_id) VALUES ($1, $2)',
-        [moveId, fighter.id]
+  try {
+    return await db.tx(async transaction => {
+      const fighter = await transaction.one(
+        `INSERT INTO fighters
+          (creator_id, name, element, image, health, attack, defense, alteration, permanence, agility)
+         VALUES ($1, $2, $3, $4::text, $5, $6, $7, $8, $9, $10)
+         RETURNING id, name, element`,
+        [user.id, input.fighterName.trim(), template.element, imageUrl,
+          template.health, template.attack, template.defense,
+          template.alteration, template.permanence, template.agility]
       );
-    }
 
-    return fighter;
-  });
+      await transaction.none(
+        'INSERT INTO users_to_fighters (user_id, fighter_id) VALUES ($1, $2)',
+        [user.id, fighter.id]
+      );
+
+      for (const moveId of input.moves) {
+        await transaction.none(
+          'INSERT INTO moves_to_fighters (move_id, fighter_id) VALUES ($1, $2)',
+          [moveId, fighter.id]
+        );
+      }
+
+      return fighter;
+    });
+  } catch (error) {
+    try {
+      await unlink(imageFile);
+    } catch (cleanupError) {
+      console.error('Could not remove unused fighter image:', cleanupError.message);
+    }
+    throw error;
+  }
 }
 
 module.exports = saveFighter;

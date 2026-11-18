@@ -1,3 +1,5 @@
+const {readFile, unlink, readdir} = require('node:fs/promises');
+const path = require('node:path');
 const assert = require('node:assert/strict');
 const {randomUUID} = require('node:crypto');
 const bcrypt = require('bcryptjs');
@@ -14,6 +16,7 @@ describe('Saving a fighter transaction', () => {
   let image;
   let startingStats;
   let template;
+  let filesBeforeTest;
 
   before(async () => {
     if (process.env.NODE_ENV !== 'test' || !process.env.POSTGRES_DB?.endsWith('_test')) {
@@ -36,13 +39,23 @@ describe('Saving a fighter transaction', () => {
   });
 
   async function removeSavedFighter() {
-    const ids = await db.map('SELECT id FROM fighters WHERE name = $1', [fighterName], row => row.id);
+    const rows = await db.any('SELECT id, image FROM fighters WHERE name = $1', [fighterName]);
+    for (const row of rows) {
+      await unlink(path.join(__dirname, '..', row.image));
+    }
+    const ids = rows.map(row => row.id);
     await db.none('DELETE FROM moves_to_fighters WHERE fighter_id = ANY($1::int[])', [ids]);
     await db.none('DELETE FROM users_to_fighters WHERE fighter_id = ANY($1::int[])', [ids]);
     await db.none('DELETE FROM fighters WHERE id = ANY($1::int[])', [ids]);
   }
 
-  afterEach(removeSavedFighter);
+  beforeEach(async () => {
+    filesBeforeTest = await readdir(path.join(__dirname, '../images'));
+  });
+  afterEach(async () => {
+    await removeSavedFighter();
+    assert.deepEqual(await readdir(path.join(__dirname, '../images')), filesBeforeTest);
+  });
   after(async () => {
     if (user) await db.none('DELETE FROM users WHERE id = $1', [user.id]);
   });
@@ -61,7 +74,8 @@ describe('Saving a fighter transaction', () => {
     assert.equal(fighter.name, fighterName);
     assert.equal(fighter.creator_id, user.id);
     assert.equal(fighter.element, 'fire');
-    assert.deepEqual(fighter.image, image.buffer);
+    assert.match(fighter.image, /^\/images\/[0-9a-f-]{36}\.png$/);
+    assert.deepEqual(await readFile(path.join(__dirname, '..', fighter.image)), image.buffer);
     for (const [name, value] of Object.entries(startingStats)) {
       assert.equal(fighter[name], value);
     }
@@ -72,6 +86,16 @@ describe('Saving a fighter transaction', () => {
       [result.id], row => String(row.move_id)
     );
     assert.deepEqual(savedMoves, moveIds.slice(0, 4));
+  });
+
+  it('gives identical uploads separate filenames', async () => {
+    const first = await saveFighter(user, input(), image);
+    const second = await saveFighter(user, input(), image);
+    const rows = await db.any('SELECT image FROM fighters WHERE id IN ($1, $2)', [first.id, second.id]);
+    assert.notEqual(rows[0].image, rows[1].image);
+    for (const row of rows) {
+      assert.deepEqual(await readFile(path.join(__dirname, '..', row.image)), image.buffer);
+    }
   });
 
   it('uses the session user rather than an owner supplied in the form', async () => {
@@ -157,6 +181,7 @@ describe('Saving a fighter transaction', () => {
       (SELECT count(*)::int FROM users_to_fighters) AS owners,
       (SELECT count(*)::int FROM moves_to_fighters) AS moves`;
     const before = await db.one(countsQuery);
+    const filesBefore = await readdir(path.join(__dirname, '../images'));
     const functionName = 'fail_save_' + randomUUID().replaceAll('-', '');
     const triggerName = functionName + '_trigger';
 
@@ -170,6 +195,7 @@ describe('Saving a fighter transaction', () => {
         EXECUTE FUNCTION ${functionName}()`);
       await assert.rejects(saveFighter(user, input(), image), /forced final move failure/);
       assert.deepEqual(await db.one(countsQuery), before);
+      assert.deepEqual(await readdir(path.join(__dirname, '../images')), filesBefore);
     } finally {
       await db.none(`DROP TRIGGER IF EXISTS ${triggerName} ON moves_to_fighters`);
       await db.none(`DROP FUNCTION ${functionName}()`);

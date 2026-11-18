@@ -13,3 +13,9 @@ Sessions use the existing express-session memory store for local development and
 Character creation: signed-in users submit a name (1-255 characters), a starter class, exactly four distinct allowed move IDs, and a readable PNG/JPEG image up to 2 MB. POST /createFighter validates and saves through saveFighter, then redirects to an ownership-checked GET confirmation. Invalid details return 400 with preserved text/selections; save failures return 500 with generic feedback and no partial records. Refreshing confirmation does not repeat the POST.
 
 The server copies the selected starter class's six stats and element. Allowed moves are all moves matching that element plus the class's default moves, with each move listed once. Class changes autofill its defaults without changing the player's name or image. Form owner/stat/element values are ignored. Player-owned fighters cannot be used as classes, and original starter records are never modified.
+
+Uploaded images are written to ProjectSourceCode/images with server-generated UUID filenames; fighters.image stores /images/<filename>.png or .jpg. The static route serves those URLs. A failed database transaction removes the new file. Runtime uploads are ignored by Git; starter images can be added deliberately.
+
+This saving code requires the coordinated image-column change to a text/path type. That schema and the starter-image paths are maintained separately. Do not run these tests against a shared database. The local scratch runner applies the planned type only to its disposable test database until the schema change lands.
+
+Saving and HTTP tests verify class stats and restrictions, unique image paths, served image contents, JPEG support, ownership, client-field tampering, confirmation refresh, and database/file rollback. Each test cleans up only its own records and files. Character-selection display remains in PR #93.

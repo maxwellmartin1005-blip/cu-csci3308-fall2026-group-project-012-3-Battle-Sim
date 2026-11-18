@@ -1,3 +1,5 @@
+const {readFile, unlink, readdir} = require('node:fs/promises');
+const path = require('node:path');
 const chai = require('chai');
 const chaiHttp = require('chai-http');
 const bcrypt = require('bcryptjs');
@@ -19,6 +21,7 @@ describe('Fighter creation form and saving', () => {
   let templateId;
   const templateStats = {health: 475, attack: 300, defense: 250, alteration: 300, permanence: 325, agility: 350};
   let agent;
+  let filesBeforeTest;
 
   before(async () => {
     if (process.env.NODE_ENV !== 'test' || !process.env.POSTGRES_DB?.endsWith('_test')) {
@@ -54,16 +57,22 @@ describe('Fighter creation form and saving', () => {
   });
 
   beforeEach(async () => {
+    filesBeforeTest = await readdir(path.join(__dirname, '../images'));
     agent = chai.request.agent(app);
     const login = await agent.post('/login').type('form').send({username, password}).redirects(0);
     expect(login).to.have.status(302);
   });
   afterEach(async () => {
     await agent.close();
-    const ids = await db.map('SELECT id FROM fighters WHERE name = $1', [fighterName], row => row.id);
+    const rows = await db.any('SELECT id, image FROM fighters WHERE name = $1', [fighterName]);
+    for (const row of rows) {
+      await unlink(path.join(__dirname, '..', row.image));
+    }
+    const ids = rows.map(row => row.id);
     await db.none('DELETE FROM moves_to_fighters WHERE fighter_id = ANY($1::int[])', [ids]);
     await db.none('DELETE FROM users_to_fighters WHERE fighter_id = ANY($1::int[])', [ids]);
     await db.none('DELETE FROM fighters WHERE id = ANY($1::int[])', [ids]);
+    expect(await readdir(path.join(__dirname, '../images'))).to.deep.equal(filesBeforeTest);
   });
 
   async function expectNoFighterSaved() {
@@ -104,7 +113,12 @@ describe('Fighter creation form and saving', () => {
     const user = await db.one('SELECT id FROM users WHERE username = $1', [username]);
     expect(fighter.creator_id).to.equal(user.id);
     expect(fighter.element).to.equal('fire');
-    expect(fighter.image).to.deep.equal(image);
+    expect(fighter.image).to.match(/^\/images\/[0-9a-f-]{36}\.png$/);
+    expect(await readFile(path.join(__dirname, '..', fighter.image))).to.deep.equal(image);
+    const served = await agent.get(fighter.image);
+    expect(served).to.have.status(200);
+    expect(served).to.have.header('content-type', 'image/png');
+    expect(served.body).to.deep.equal(image);
     for (const [name, value] of Object.entries(templateStats)) {
       expect(fighter[name]).to.equal(value);
     }
@@ -177,7 +191,8 @@ describe('Fighter creation form and saving', () => {
     const res = await submit({}, jpegImage, 'image/jpeg');
     expect(res).to.have.status(302);
     const saved = await db.one('SELECT image FROM fighters WHERE name = $1', [fighterName]);
-    expect(saved.image).to.deep.equal(jpegImage);
+    expect(saved.image).to.match(/^\/images\/[0-9a-f-]{36}\.jpg$/);
+    expect(await readFile(path.join(__dirname, '..', saved.image))).to.deep.equal(jpegImage);
   });
 
   for (const format of ['png', 'jpeg']) {
@@ -256,6 +271,7 @@ describe('Fighter creation form and saving', () => {
       (SELECT count(*)::int FROM users_to_fighters) AS owners,
       (SELECT count(*)::int FROM moves_to_fighters) AS moves`;
     const before = await db.one(counts);
+    const filesBefore = await readdir(path.join(__dirname, '../images'));
     const name = 'fail_http_' + randomUUID().replaceAll('-', '');
     await db.none(`CREATE FUNCTION ${name}() RETURNS trigger LANGUAGE plpgsql AS $$
       BEGIN RAISE EXCEPTION 'forced HTTP save failure'; END;
@@ -269,6 +285,7 @@ describe('Fighter creation form and saving', () => {
       expect(res.text).not.to.include('forced HTTP save failure');
       expect(res.text).to.include(fighterName);
       expect(await db.one(counts)).to.deep.equal(before);
+      expect(await readdir(path.join(__dirname, '../images'))).to.deep.equal(filesBefore);
     } finally {
       await db.none(`DROP TRIGGER IF EXISTS ${name} ON moves_to_fighters`);
       await db.none(`DROP FUNCTION ${name}()`);
