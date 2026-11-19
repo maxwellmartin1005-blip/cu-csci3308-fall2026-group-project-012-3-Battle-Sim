@@ -4,7 +4,7 @@ const chai = require('chai');
 const chaiHttp = require('chai-http');
 const bcrypt = require('bcryptjs');
 const sharp = require('sharp');
-const {randomUUID} = require('node:crypto');
+const {randomUUID, randomBytes} = require('node:crypto');
 const {db} = require('./db');
 const app = require('../app');
 
@@ -233,9 +233,31 @@ describe('Fighter creation form and saving', () => {
     });
   }
 
-  it('rejects a MIME type that does not match the image', async () => {
-    const res = await submit({}, image, 'image/jpeg');
+  for (const type of ['application/octet-stream', 'image/x-png', 'image/jpeg']) {
+    it('accepts a real 3 KB PNG reported as ' + type, async () => {
+      const png = await sharp(randomBytes(32 * 32 * 3), {raw: {width: 32, height: 32, channels: 3}}).png().toBuffer();
+      expect(png.length).to.be.within(2048, 4096);
+      const res = await submit({}, png, type);
+      expect(res).to.have.status(302);
+      const saved = await db.one('SELECT image FROM fighters WHERE name = $1', [fighterName]);
+      expect(saved.image).to.match(/\.png$/);
+      expect(await readFile(path.join(__dirname, '..', saved.image))).to.deep.equal(png);
+    });
+  }
+
+  it('uses the JPEG extension even if the browser reports PNG', async () => {
+    const res = await submit({}, jpegImage, 'image/png');
+    expect(res).to.have.status(302);
+    const saved = await db.one('SELECT image FROM fighters WHERE name = $1', [fighterName]);
+    expect(saved.image).to.match(/\.jpg$/);
+    expect(await readFile(path.join(__dirname, '..', saved.image))).to.deep.equal(jpegImage);
+  });
+
+  it('rejects a real WebP even when reported as PNG', async () => {
+    const webp = await sharp(image).webp().toBuffer();
+    const res = await submit({}, webp, 'image/png');
     expect(res).to.have.status(400);
+    expect(res.text).to.include('Use a readable PNG or JPEG image file.');
     await expectNoFighterSaved();
   });
 

@@ -4,6 +4,7 @@ const {getFighterTemplates, getAllowedMoves} = require('./fighterTemplates');
 const {writeFile, unlink} = require('node:fs/promises');
 const path = require('node:path');
 const {randomUUID} = require('node:crypto');
+const sharp = require('sharp');
 
 function validationError(errors) {
   const error = new Error(errors.join(' '));
@@ -27,7 +28,8 @@ async function saveFighter(user, input, image) {
   const errors = await validateFighter(details, image, availableMoves);
   if (errors.length) throw validationError(errors);
 
-  const extension = image.mimetype === 'image/png' ? '.png' : '.jpg';
+  const {format} = await sharp(image.buffer).metadata();
+  const extension = format === 'png' ? '.png' : '.jpg';
   const filename = randomUUID() + extension;
   const imageFile = path.join(__dirname, 'images', filename);
   const imageUrl = '/images/' + filename;

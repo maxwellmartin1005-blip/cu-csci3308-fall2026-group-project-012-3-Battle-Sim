@@ -34,8 +34,8 @@ imageInput.addEventListener('change', () => {
   imageInput.setCustomValidity('');
   const file = imageInput.files[0];
   if (!file) return;
-  if (!['image/png', 'image/jpeg'].includes(file.type) || file.size > 2 * 1024 * 1024) {
-    imageInput.setCustomValidity('Choose a PNG or JPEG image no larger than 2 MB.');
+  if (file.size > 2 * 1024 * 1024) {
+    imageInput.setCustomValidity('Choose an image no larger than 2 MB.');
     imageInput.reportValidity();
     return;
   }
