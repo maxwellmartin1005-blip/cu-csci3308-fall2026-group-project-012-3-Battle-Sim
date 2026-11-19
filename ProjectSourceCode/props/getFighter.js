@@ -1,11 +1,5 @@
 async function getFighter(id, db) {
-    const query = `\
-        SELECT * from fighters\
-            WHERE creator_id = ${id}\
-    `;
-
-    const response = await db.one(query);
-    return response;
+  return db.oneOrNone('SELECT * FROM fighters WHERE id = $1', [id]);
 }
 
 module.exports = getFighter;

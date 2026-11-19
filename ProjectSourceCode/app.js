@@ -263,11 +263,9 @@ app.get('/battleResults', (req, res) => {
   });
 });
 
-app.get('/battle', async(req, res) => {
-  // Uncomment this line to get a fighter from database
-  // const userFighter = await getFighter(0, db)
-
-  res.render('pages/battle')
+app.get('/battle', async (req, res) => {
+  const fighter = await getFighter(req.query.fighterId, db);
+  res.render('pages/battle', { fighter });
 });
 
 module.exports = app;

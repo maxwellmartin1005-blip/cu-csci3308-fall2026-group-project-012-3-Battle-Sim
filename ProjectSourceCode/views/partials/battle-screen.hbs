@@ -5,7 +5,7 @@
     <div class="battle-screen__fighters">
         <article class="battle-screen__fighter" aria-labelledby="battle-fighter-a">
             <p class="battle-screen__role">You</p>
-            <h3 id="battle-fighter-a">Fighter A</h3>
+            <h3 id="battle-fighter-a">{{#if fighter}}{{fighter.name}}{{else}}Fighter A{{/if}}</h3>
             <div class="battle-screen__portrait" role="img" aria-label="Fighter A image placeholder">
                 Image placeholder
             </div>
