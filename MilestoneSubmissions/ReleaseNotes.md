@@ -5,6 +5,46 @@ each item to its pull request, so your TA can see who did what.
 
 ---
 
+
+## Week 4 — `<Wenesday, Nov. 18 2026>`
+## What's Changed
+* Adding Move Documentation by @ZandadaPanda96 in https://github.com/maxwellmartin1005-blip/cu-csci3308-fall2026-group-project-012-3-Battle-Sim/pull/80
+* Add placeholder home page UI by @AndreKalberer in https://github.com/maxwellmartin1005-blip/cu-csci3308-fall2026-group-project-012-3-Battle-Sim/pull/77
+* Verify login credentials against registered users by @AndreKalberer in https://github.com/maxwellmartin1005-blip/cu-csci3308-fall2026-group-project-012-3-Battle-Sim/pull/78
+* Add login sessions and logout by @AndreKalberer in https://github.com/maxwellmartin1005-blip/cu-csci3308-fall2026-group-project-012-3-Battle-Sim/pull/79
+* adding ID values by @ZandadaPanda96 in https://github.com/maxwellmartin1005-blip/cu-csci3308-fall2026-group-project-012-3-Battle-Sim/pull/85
+* Issue 74 battle system by @Aidan-dev50 in https://github.com/maxwellmartin1005-blip/cu-csci3308-fall2026-group-project-012-3-Battle-Sim/pull/87
+* Issue 63 creating classes First Class pull by @maxwellmartin1005-blip in https://github.com/maxwellmartin1005-blip/cu-csci3308-fall2026-group-project-012-3-Battle-Sim/pull/86
+* Connect Home Play button to character selection by @AndreKalberer in https://github.com/maxwellmartin1005-blip/cu-csci3308-fall2026-group-project-012-3-Battle-Sim/pull/91
+* Complete fighter creation form and validation by @AndreKalberer in https://github.com/maxwellmartin1005-blip/cu-csci3308-fall2026-group-project-012-3-Battle-Sim/pull/90
+* Issue 89 creating the other classes by @maxwellmartin1005-blip in https://github.com/maxwellmartin1005-blip/cu-csci3308-fall2026-group-project-012-3-Battle-Sim/pull/92
+* Added TA meeting log for 11/17/2026 by @maxwellmartin1005-blip in https://github.com/maxwellmartin1005-blip/cu-csci3308-fall2026-group-project-012-3-Battle-Sim/pull/96
+
+
+**Full Changelog**: https://github.com/maxwellmartin1005-blip/cu-csci3308-fall2026-group-project-012-3-Battle-Sim/compare/week-3...week-4
+
+## Week 3 — `<Tuesday, Nov. 10 2026>`
+## What's Changed
+* Added week 2 release notes by @yuanzuo09 in https://github.com/maxwellmartin1005-blip/cu-csci3308-fall2026-group-project-012-3-Battle-Sim/pull/49
+* Battle Stat Documentation by @ZandadaPanda96 in https://github.com/maxwellmartin1005-blip/cu-csci3308-fall2026-group-project-012-3-Battle-Sim/pull/50
+* Battle Stat Documentation Change by @ZandadaPanda96 in https://github.com/maxwellmartin1005-blip/cu-csci3308-fall2026-group-project-012-3-Battle-Sim/pull/55
+* Docker compose created by @Aidan-dev50 in https://github.com/maxwellmartin1005-blip/cu-csci3308-fall2026-group-project-012-3-Battle-Sim/pull/54
+* Correct README contributor table headers by @AndreKalberer in https://github.com/maxwellmartin1005-blip/cu-csci3308-fall2026-group-project-012-3-Battle-Sim/pull/59
+* Issue 61 database definition refinements by @yuanzuo09 in https://github.com/maxwellmartin1005-blip/cu-csci3308-fall2026-group-project-012-3-Battle-Sim/pull/64
+* Register route functionality by @jamiegrove76-pixel in https://github.com/maxwellmartin1005-blip/cu-csci3308-fall2026-group-project-012-3-Battle-Sim/pull/60
+* adding moves by @ZandadaPanda96 in https://github.com/maxwellmartin1005-blip/cu-csci3308-fall2026-group-project-012-3-Battle-Sim/pull/67
+* Issue 58 defining methodology for class creation documentation by @maxwellmartin1005-blip in https://github.com/maxwellmartin1005-blip/cu-csci3308-fall2026-group-project-012-3-Battle-Sim/pull/62
+* Issue 53 implement testing suite by @Aidan-dev50 in https://github.com/maxwellmartin1005-blip/cu-csci3308-fall2026-group-project-012-3-Battle-Sim/pull/66
+* Fixed docker compose start up issue and integration issue with the database by @yuanzuo09 in https://github.com/maxwellmartin1005-blip/cu-csci3308-fall2026-group-project-012-3-Battle-Sim/pull/70
+* Adding Week 3 Meeting Log by @ZandadaPanda96 in https://github.com/maxwellmartin1005-blip/cu-csci3308-fall2026-group-project-012-3-Battle-Sim/pull/71
+* Fix register form input types and required fields by @jamiegrove76-pixel in https://github.com/maxwellmartin1005-blip/cu-csci3308-fall2026-group-project-012-3-Battle-Sim/pull/69
+
+**Full Changelog**: week-2...week-3
+
+### Planned for next week
+The project board: https://github.com/users/maxwellmartin1005-blip/projects/3
+
+
 ## Week 2 — `<Tuesday, Nov. 3 2026>`
 ## What's Changed
 * Added week 1 Release Notes by @yuanzuo09 in https://github.com/maxwellmartin1005-blip/cu-csci3308-fall2026-group-project-012-3-Battle-Sim/pull/34
