@@ -9,13 +9,23 @@
             <div class="battle-screen__portrait" role="img" aria-label="Fighter A image placeholder">
                 Image placeholder
             </div>
+            {{#if fighter}}
             <label class="battle-screen__health-label" for="battle-health-a">
                 <span>Health</span>
-                <span>75 / 100 HP</span>
+                <span>{{fighter.health}} / {{fighter.health}} HP</span>
+            </label>
+            <meter class="battle-screen__health" id="battle-health-a" min="0" max="{{fighter.health}}" value="{{fighter.health}}">
+                {{fighter.health}} out of {{fighter.health}} health points
+            </meter>
+            {{else}}
+            <label class="battle-screen__health-label" for="battle-health-a">
+                <span>Health</span>
+                <span>100 / 100 HP</span>
             </label>
             <meter class="battle-screen__health" id="battle-health-a" min="0" max="100" value="100">
-                75 out of 100 health points
+                100 out of 100 health points
             </meter>
+            {{/if}}
         </article>
 
         <article class="battle-screen__fighter" aria-labelledby="battle-fighter-b">
