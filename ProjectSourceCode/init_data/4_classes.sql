@@ -1,5 +1,5 @@
-INSERT INTO fighters (creator_id, name , health, attack, defense, alteration, permanence, agility, element) 
-VALUES (0, 'The Generic One, Master of None', 500, 300, 300, 300, 300, 300, 'fire');
+INSERT INTO fighters (creator_id, name , health, attack, defense, alteration, permanence, agility, element, image)
+VALUES (0, 'The Generic One, Master of None', 500, 300, 300, 300, 300, 300, 'fire', '/images/Generic.png');
 
 -- Fire Jab(Quick Attack, Fire)
 INSERT INTO moves_to_fighters  (fighter_id, move_id) VALUES (1,1);
@@ -12,8 +12,8 @@ INSERT INTO moves_to_fighters  (fighter_id, move_id) VALUES (1,31);
 
 
 
-INSERT INTO fighters (creator_id, name , health, attack, defense, alteration, permanence, agility, element) 
-VALUES (0, 'Speedster the Living Rapid', 475, 300, 250, 300, 325, 350, 'water')
+INSERT INTO fighters (creator_id, name , health, attack, defense, alteration, permanence, agility, element, image)
+VALUES (0, 'Speedster the Living Rapid', 475, 300, 250, 300, 325, 350, 'water', '/images/water.png')
 ;
 
 -- Ripple(Quick Attack, Water)
@@ -27,8 +27,8 @@ INSERT INTO moves_to_fighters(fighter_id, move_id) VALUES(2,2),
 
 
 
-INSERT INTO fighters (creator_id, name , health, attack, defense, alteration, permanence, agility, element) 
-VALUES (0, 'Golem Earth''s protector', 525, 300, 350, 275, 300, 250, 'earth')
+INSERT INTO fighters (creator_id, name , health, attack, defense, alteration, permanence, agility, element, image)
+VALUES (0, 'Golem Earth''s protector', 525, 300, 350, 275, 300, 250, 'earth', '/images/earth.png')
 ;
 
 -- Pebble Toss(Quick Attack, Earth)
@@ -41,8 +41,8 @@ INSERT INTO moves_to_fighters(fighter_id, move_id) VALUES(3,3),
 (3,33);
 
 
-INSERT INTO fighters (creator_id, name , health, attack, defense, alteration, permanence, agility, element) 
-VALUES (0, 'Druid of the Swift Weeds', 500, 300, 275, 350, 250, 325, 'life')
+INSERT INTO fighters (creator_id, name , health, attack, defense, alteration, permanence, agility, element, image)
+VALUES (0, 'Druid of the Swift Weeds', 500, 300, 275, 350, 250, 325, 'life', '/images/grass.png')
 ;
 
 -- Total Peace(Long Alteration, Life)
@@ -54,8 +54,8 @@ INSERT INTO moves_to_fighters(fighter_id, move_id) VALUES(4,34),
 -- Sprout(Quick Atack, Life)
 (4,4);
 
-INSERT INTO fighters (creator_id, name , health, attack, defense, alteration, permanence, agility, element) 
-VALUES (0, 'Inferno the Ash Bringer', 500, 350, 275, 300, 250, 325, 'fire')
+INSERT INTO fighters (creator_id, name , health, attack, defense, alteration, permanence, agility, element, image)
+VALUES (0, 'Inferno the Ash Bringer', 500, 350, 275, 300, 250, 325, 'fire', '/images/fire.png')
 ;
 
 -- Fire Jab(Quick Attack, Fire)
@@ -67,8 +67,8 @@ INSERT INTO moves_to_fighters(fighter_id, move_id) VALUES(5,1),
 -- Flame On(Long Alteration, Fire)
 (5,31);
 
-INSERT INTO fighters (creator_id, name , health, attack, defense, alteration, permanence, agility, element) 
-VALUES (0, 'Seraphin of Purification', 550, 275, 300, 325, 250, 300, 'light')
+INSERT INTO fighters (creator_id, name , health, attack, defense, alteration, permanence, agility, element, image)
+VALUES (0, 'Seraphin of Purification', 550, 275, 300, 325, 250, 300, 'light', '/images/Light.png')
 ;
 
 -- Blind(Nomral Attack, Light)
@@ -80,8 +80,8 @@ INSERT INTO moves_to_fighters(fighter_id, move_id) VALUES(6,11),
 -- Restraining Order(Long Alteration, Light)
 (6,35);
 
-INSERT INTO fighters (creator_id, name , health, attack, defense, alteration, permanence, agility, element) 
-VALUES (0, 'Abyssal Trickster', 500, 275, 250, 325, 350, 300, 'dark')
+INSERT INTO fighters (creator_id, name , health, attack, defense, alteration, permanence, agility, element, image)
+VALUES (0, 'Abyssal Trickster', 500, 275, 250, 325, 350, 300, 'dark', '/images/shadow.png')
 ;
 
 -- Shadow Strike(Long Attack, Dark)

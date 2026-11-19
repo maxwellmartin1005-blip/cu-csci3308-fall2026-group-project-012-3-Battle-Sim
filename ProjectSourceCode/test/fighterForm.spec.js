@@ -103,6 +103,18 @@ describe('Fighter creation form and saving', () => {
     expect(res.text).not.to.include('value="quickHit"');
   });
 
+  it('serves all seven starter images through their database paths', async () => {
+    const starters = await db.any('SELECT image FROM fighters WHERE creator_id = 0 AND image IS NOT NULL');
+    expect(starters).to.have.lengthOf(7);
+    for (const starter of starters) {
+      expect(starter.image).to.match(/^\/images\/[A-Za-z]+\.png$/);
+      const response = await agent.get(starter.image);
+      expect(response).to.have.status(200);
+      expect(response).to.have.header('content-type', 'image/png');
+      expect(response.body).to.deep.equal(await readFile(path.join(__dirname, '..', starter.image)));
+    }
+  });
+
   it('saves exactly one fighter, its image, owner, selected class stats and four moves through HTTP', async () => {
     const res = await submit();
     expect(res).to.have.status(302);
@@ -119,6 +131,10 @@ describe('Fighter creation form and saving', () => {
     expect(served).to.have.status(200);
     expect(served).to.have.header('content-type', 'image/png');
     expect(served.body).to.deep.equal(image);
+    const selection = await agent.get('/characterSelect');
+    expect(selection).to.have.status(200);
+    expect(selection.text).to.include(fighterName);
+    expect(selection.text).to.include('src="' + fighter.image + '"');
     for (const [name, value] of Object.entries(templateStats)) {
       expect(fighter[name]).to.equal(value);
     }

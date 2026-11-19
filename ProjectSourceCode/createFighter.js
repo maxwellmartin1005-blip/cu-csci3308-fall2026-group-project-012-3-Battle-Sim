@@ -13,11 +13,13 @@ classSelect.addEventListener('change', () => {
     value.textContent = option.dataset[value.dataset.stat] || '—';
   }
   for (const choice of moveChoices) {
-    const allowed = hasClass && (choice.dataset.element === option.dataset.element || defaultIds.has(choice.dataset.moveId));
+    const sameElement = choice.dataset.element === option.dataset.element;
+    const isDefaultMove = defaultIds.has(choice.dataset.moveId);
+    const allowed = hasClass && (sameElement || isDefaultMove);
     choice.hidden = !allowed;
     const checkbox = choice.querySelector('input');
     checkbox.disabled = !allowed;
-    checkbox.checked = allowed && defaultIds.has(checkbox.value);
+    checkbox.checked = allowed && isDefaultMove;
   }
   moveFieldset.disabled = !hasClass;
 });
