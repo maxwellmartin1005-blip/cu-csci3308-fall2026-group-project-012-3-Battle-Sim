@@ -263,9 +263,13 @@ app.get('/battleResults', (req, res) => {
   });
 });
 
-app.get('/battle', async (req, res) => {
-  const fighter = await getFighter(req.query.fighterId, db);
-  res.render('pages/battle', { fighter });
+app.get('/battle', requireLogin, async (req, res, next) => {
+  try {
+    const fighter = await getFighter(Number(req.query.fighterId) || 0, db);
+    res.render('pages/battle', { fighter });
+  } catch (err) {
+    next(err);
+  }
 });
 
 module.exports = app;
