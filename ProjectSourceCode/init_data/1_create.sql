@@ -22,7 +22,7 @@ CREATE TABLE IF NOT EXISTS fighters(
     permanence INT DEFAULT 0 NOT NULL,
     agility INT DEFAULT 0 NOT NULL,
     element VARCHAR(255) NOT NULL,
-    image BYTEA DEFAULT NULL,
+    image TEXT DEFAULT NULL,
     FOREIGN KEY (creator_id) REFERENCES users(id)
 );
 

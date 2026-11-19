@@ -1,8 +1,10 @@
+const {readFile, unlink, readdir} = require('node:fs/promises');
+const path = require('node:path');
 const chai = require('chai');
 const chaiHttp = require('chai-http');
 const bcrypt = require('bcryptjs');
 const sharp = require('sharp');
-const {randomUUID} = require('node:crypto');
+const {randomUUID, randomBytes} = require('node:crypto');
 const {db} = require('./db');
 const app = require('../app');
 
@@ -11,12 +13,15 @@ const {expect} = chai;
 let image;
 let jpegImage;
 
-describe('Fighter creation form preview', () => {
+describe('Fighter creation form and saving', () => {
   const username = 'fighter_form_' + randomUUID();
   const fighterName = 'Preview ' + randomUUID();
   const password = 'FighterPreview123!';
   const moveIds = [];
+  let templateId;
+  const templateStats = {health: 475, attack: 300, defense: 250, alteration: 300, permanence: 325, agility: 350};
   let agent;
+  let filesBeforeTest;
 
   before(async () => {
     if (process.env.NODE_ENV !== 'test' || !process.env.POSTGRES_DB?.endsWith('_test')) {
@@ -31,24 +36,52 @@ describe('Fighter creation form preview', () => {
         ['Test move ' + username + ' ' + index]);
       moveIds.push(move.id);
     }
+    const template = await db.one(
+      `INSERT INTO fighters (creator_id, name, element, health, attack, defense, alteration, permanence, agility)
+       VALUES (0, $1, 'fire', $2, $3, $4, $5, $6, $7) RETURNING id`,
+      ['Class ' + username, ...Object.values(templateStats)]
+    );
+    templateId = template.id;
+    for (const id of moveIds.slice(0, 4)) {
+      await db.none('INSERT INTO moves_to_fighters (fighter_id, move_id) VALUES ($1, $2)', [templateId, id]);
+    }
   });
 
   after(async () => {
     if (process.env.NODE_ENV === 'test' && process.env.POSTGRES_DB?.endsWith('_test')) {
+      await db.none('DELETE FROM moves_to_fighters WHERE fighter_id = $1', [templateId]);
+      await db.none('DELETE FROM fighters WHERE id = $1', [templateId]);
       await db.none('DELETE FROM moves WHERE id = ANY($1::int[])', [moveIds]);
       await db.none('DELETE FROM users WHERE username = $1', [username]);
     }
   });
 
   beforeEach(async () => {
+    filesBeforeTest = await readdir(path.join(__dirname, '../images'));
     agent = chai.request.agent(app);
     const login = await agent.post('/login').type('form').send({username, password}).redirects(0);
     expect(login).to.have.status(302);
   });
-  afterEach(async () => { await agent.close(); });
+  afterEach(async () => {
+    await agent.close();
+    const rows = await db.any('SELECT id, image FROM fighters WHERE name = $1', [fighterName]);
+    for (const row of rows) {
+      await unlink(path.join(__dirname, '..', row.image));
+    }
+    const ids = rows.map(row => row.id);
+    await db.none('DELETE FROM moves_to_fighters WHERE fighter_id = ANY($1::int[])', [ids]);
+    await db.none('DELETE FROM users_to_fighters WHERE fighter_id = ANY($1::int[])', [ids]);
+    await db.none('DELETE FROM fighters WHERE id = ANY($1::int[])', [ids]);
+    expect(await readdir(path.join(__dirname, '../images'))).to.deep.equal(filesBeforeTest);
+  });
+
+  async function expectNoFighterSaved() {
+    const rows = await db.any('SELECT id FROM fighters WHERE name = $1', [fighterName]);
+    expect(rows).to.have.lengthOf(0);
+  }
 
   function submit(overrides = {}, data = image, imageType = 'image/png') {
-    const fields = {fighterName, element: 'fire', moves: moveIds.slice(0, 4).map(String), ...overrides};
+    const fields = {fighterName, templateId: String(templateId), element: 'fire', moves: moveIds.slice(0, 4).map(String), ...overrides};
     let request = agent.post('/createFighter').redirects(0);
     for (const [name, value] of Object.entries(fields)) {
       request = request.field(name, value);
@@ -59,33 +92,98 @@ describe('Fighter creation form preview', () => {
     return request;
   }
 
-  it('renders real move IDs, elements, and the preview-only button', async () => {
+  it('renders real move IDs, elements, and the Save Fighter button', async () => {
     const res = await agent.get('/createFighter');
     expect(res).to.have.status(200);
     expect(res.text).to.include('value="' + moveIds[0] + '"');
     expect(res.text).to.include('Test move ' + username);
-    expect(res.text).to.include('value="dark"');
-    expect(res.text).to.include('Check fighter');
+    expect(res.text).to.include('name="templateId"');
+    expect(res.text).to.include('data-moves="' + moveIds.slice(0, 4).join(',') + '"');
+    expect(res.text).to.include('Save Fighter');
     expect(res.text).not.to.include('value="quickHit"');
   });
 
-  it('accepts exactly four distinct moves without creating a fighter yet', async () => {
+  it('serves all seven starter images through their database paths', async () => {
+    const starters = await db.any('SELECT image FROM fighters WHERE creator_id = 0 AND image IS NOT NULL');
+    expect(starters).to.have.lengthOf(7);
+    for (const starter of starters) {
+      expect(starter.image).to.match(/^\/images\/[A-Za-z]+\.png$/);
+      const response = await agent.get(starter.image);
+      expect(response).to.have.status(200);
+      expect(response).to.have.header('content-type', 'image/png');
+      expect(response.body).to.deep.equal(await readFile(path.join(__dirname, '..', starter.image)));
+    }
+  });
+
+  it('saves exactly one fighter, its image, owner, selected class stats and four moves through HTTP', async () => {
     const res = await submit();
-    expect(res).to.have.status(200);
-    expect(res.text).to.include('Fighter details look good. Saving is not available yet.');
-    const rows = await db.any('SELECT id FROM fighters WHERE name = $1', [fighterName]);
-    expect(rows).to.have.lengthOf(0);
+    expect(res).to.have.status(302);
+    expect(res.headers.location).to.match(/^\/createFighter\?saved=\d+$/);
+    const rows = await db.any('SELECT * FROM fighters WHERE name = $1', [fighterName]);
+    expect(rows).to.have.lengthOf(1);
+    const fighter = rows[0];
+    const user = await db.one('SELECT id FROM users WHERE username = $1', [username]);
+    expect(fighter.creator_id).to.equal(user.id);
+    expect(fighter.element).to.equal('fire');
+    expect(fighter.image).to.match(/^\/images\/[0-9a-f-]{36}\.png$/);
+    expect(await readFile(path.join(__dirname, '..', fighter.image))).to.deep.equal(image);
+    const served = await agent.get(fighter.image);
+    expect(served).to.have.status(200);
+    expect(served).to.have.header('content-type', 'image/png');
+    expect(served.body).to.deep.equal(image);
+    const selection = await agent.get('/characterSelect');
+    expect(selection).to.have.status(200);
+    expect(selection.text).to.include(fighterName);
+    expect(selection.text).to.include('src="' + fighter.image + '"');
+    for (const [name, value] of Object.entries(templateStats)) {
+      expect(fighter[name]).to.equal(value);
+    }
+    const owners = await db.any('SELECT user_id FROM users_to_fighters WHERE fighter_id = $1', [fighter.id]);
+    expect(owners).to.deep.equal([{user_id: user.id}]);
+    const moves = await db.map('SELECT move_id FROM moves_to_fighters WHERE fighter_id = $1 ORDER BY move_id',
+      [fighter.id], row => row.move_id);
+    expect(moves).to.deep.equal(moveIds.slice(0, 4));
+
+    const confirmation = await agent.get(res.headers.location);
+    expect(confirmation).to.have.status(200);
+    expect(confirmation.text).to.include('Fighter saved: ' + fighterName);
+    expect(confirmation.text).to.include('href="/characterSelect"');
+    await agent.get(res.headers.location);
+    const afterRefresh = await db.any('SELECT id FROM fighters WHERE name = $1', [fighterName]);
+    expect(afterRefresh).to.have.lengthOf(1);
+  });
+
+  it('ignores form owner/stat values and uses the selected class element', async () => {
+    const res = await submit({creator_id: '0', user_id: '0', health: '999999', attack: '999999', element: 'water'});
+    expect(res).to.have.status(302);
+    const fighter = await db.one('SELECT creator_id, health, attack, element FROM fighters WHERE name = $1', [fighterName]);
+    const user = await db.one('SELECT id FROM users WHERE username = $1', [username]);
+    const baseline = templateStats;
+    expect(fighter.creator_id).to.equal(user.id);
+    expect(fighter.health).to.equal(baseline.health);
+    expect(fighter.attack).to.equal(baseline.attack);
+    expect(fighter.element).to.equal('fire');
+  });
+
+  it('shows confirmation only for a fighter owned by the signed-in user', async () => {
+    const starter = await db.one('SELECT id FROM fighters WHERE creator_id = 0 ORDER BY id LIMIT 1');
+    for (const id of [String(starter.id), 'not-a-number', '999999999999999999999999']) {
+      const res = await agent.get('/createFighter?saved=' + id);
+      expect(res).to.have.status(200);
+      expect(res.text).not.to.include('Fighter saved:');
+    }
   });
 
   for (const testCase of [
     {name: 'a blank name', input: {fighterName: '   '}, message: 'Enter a fighter name'},
     {name: 'a name longer than 255 characters', input: {fighterName: 'x'.repeat(256)}, message: 'Enter a fighter name'},
-    {name: 'an invalid element', input: {element: 'lava'}, message: 'Choose one of the six elements.'},
+    {name: 'an invalid class', input: {templateId: '999999999'}, message: 'Choose an available class.'},
     {name: 'no selected moves', input: {moves: ''}, message: 'Choose exactly four different available moves.'},
   ]) {
     it('rejects ' + testCase.name, async () => {
       const res = await submit(testCase.input);
       expect(res).to.have.status(400);
+      await expectNoFighterSaved();
       expect(res.text).to.include(testCase.message);
     });
   }
@@ -93,6 +191,7 @@ describe('Fighter creation form preview', () => {
   it('rejects a missing image', async () => {
     const res = await submit({}, null);
     expect(res).to.have.status(400);
+    await expectNoFighterSaved();
     expect(res.text).to.include('Choose a PNG or JPEG image.');
     expect(res.text).to.include(fighterName);
   });
@@ -100,12 +199,16 @@ describe('Fighter creation form preview', () => {
   it('rejects a text file pretending to be a PNG', async () => {
     const res = await submit({}, Buffer.from('not an image'));
     expect(res).to.have.status(400);
+    await expectNoFighterSaved();
     expect(res.text).to.include('Use a readable PNG or JPEG image file.');
   });
 
   it('accepts a readable JPEG as well as a PNG', async () => {
     const res = await submit({}, jpegImage, 'image/jpeg');
-    expect(res).to.have.status(200);
+    expect(res).to.have.status(302);
+    const saved = await db.one('SELECT image FROM fighters WHERE name = $1', [fighterName]);
+    expect(saved.image).to.match(/^\/images\/[0-9a-f-]{36}\.jpg$/);
+    expect(await readFile(path.join(__dirname, '..', saved.image))).to.deep.equal(jpegImage);
   });
 
   for (const format of ['png', 'jpeg']) {
@@ -115,6 +218,7 @@ describe('Fighter creation form preview', () => {
         : Buffer.from([255, 216, 255]);
       const res = await submit({}, header, 'image/' + format);
       expect(res).to.have.status(400);
+      await expectNoFighterSaved();
       expect(res.text).to.include('Use a readable PNG or JPEG image file.');
     });
 
@@ -125,19 +229,45 @@ describe('Fighter creation form preview', () => {
       await sharp(truncated).metadata();
       const res = await submit({}, truncated, 'image/' + format);
       expect(res).to.have.status(400);
+      await expectNoFighterSaved();
     });
   }
 
-  it('rejects a MIME type that does not match the image', async () => {
-    const res = await submit({}, image, 'image/jpeg');
+  for (const type of ['application/octet-stream', 'image/x-png', 'image/jpeg']) {
+    it('accepts a real 3 KB PNG reported as ' + type, async () => {
+      const png = await sharp(randomBytes(32 * 32 * 3), {raw: {width: 32, height: 32, channels: 3}}).png().toBuffer();
+      expect(png.length).to.be.within(2048, 4096);
+      const res = await submit({}, png, type);
+      expect(res).to.have.status(302);
+      const saved = await db.one('SELECT image FROM fighters WHERE name = $1', [fighterName]);
+      expect(saved.image).to.match(/\.png$/);
+      expect(await readFile(path.join(__dirname, '..', saved.image))).to.deep.equal(png);
+    });
+  }
+
+  it('uses the JPEG extension even if the browser reports PNG', async () => {
+    const res = await submit({}, jpegImage, 'image/png');
+    expect(res).to.have.status(302);
+    const saved = await db.one('SELECT image FROM fighters WHERE name = $1', [fighterName]);
+    expect(saved.image).to.match(/\.jpg$/);
+    expect(await readFile(path.join(__dirname, '..', saved.image))).to.deep.equal(jpegImage);
+  });
+
+  it('rejects a real WebP even when reported as PNG', async () => {
+    const webp = await sharp(image).webp().toBuffer();
+    const res = await submit({}, webp, 'image/png');
     expect(res).to.have.status(400);
+    expect(res.text).to.include('Use a readable PNG or JPEG image file.');
+    await expectNoFighterSaved();
   });
 
   it('preserves the name, element and selected move after an image error', async () => {
     const res = await submit({element: 'water'}, Buffer.from('not an image'));
     expect(res).to.have.status(400);
+    await expectNoFighterSaved();
     expect(res.text).to.include('value="' + fighterName + '"');
-    expect(res.text).to.include('value="water" selected');
+    expect(res.text).to.include('value="' + templateId + '" selected');
+    expect(res.text).to.include('name="element" value="fire" readonly');
     for (const id of moveIds.slice(0, 4)) {
       expect(res.text).to.include('value="' + id + '" checked');
     }
@@ -147,6 +277,7 @@ describe('Fighter creation form preview', () => {
     it('rejects ' + count + ' selected moves', async () => {
       const res = await submit({moves: moveIds.slice(0, count).map(String)});
       expect(res).to.have.status(400);
+      await expectNoFighterSaved();
       expect(res.text).to.include('Choose exactly four different available moves.');
     });
   }
@@ -155,19 +286,48 @@ describe('Fighter creation form preview', () => {
     const moves = [...moveIds.slice(0, 3).map(String), '999999999'];
     const res = await submit({moves});
     expect(res).to.have.status(400);
+    await expectNoFighterSaved();
     expect(res.text).to.include('Choose exactly four different available moves.');
   });
 
   it('rejects repeated move IDs', async () => {
     const res = await submit({moves: Array(4).fill(String(moveIds[0]))});
     expect(res).to.have.status(400);
+    await expectNoFighterSaved();
     expect(res.text).to.include('Choose exactly four different available moves.');
   });
 
   it('rejects images larger than 2 MB', async () => {
     const res = await submit({}, Buffer.alloc(2 * 1024 * 1024 + 1));
     expect(res).to.have.status(400);
+    await expectNoFighterSaved();
     expect(res.text).to.include('Choose an image no larger than 2 MB.');
+  });
+
+  it('shows a useful error and rolls back when the database rejects a move insert', async () => {
+    const counts = `SELECT (SELECT count(*)::int FROM fighters) AS fighters,
+      (SELECT count(*)::int FROM users_to_fighters) AS owners,
+      (SELECT count(*)::int FROM moves_to_fighters) AS moves`;
+    const before = await db.one(counts);
+    const filesBefore = await readdir(path.join(__dirname, '../images'));
+    const name = 'fail_http_' + randomUUID().replaceAll('-', '');
+    await db.none(`CREATE FUNCTION ${name}() RETURNS trigger LANGUAGE plpgsql AS $$
+      BEGIN RAISE EXCEPTION 'forced HTTP save failure'; END;
+    $$`);
+    try {
+      await db.none(`CREATE TRIGGER ${name} BEFORE INSERT ON moves_to_fighters
+        FOR EACH ROW WHEN (NEW.move_id = ${moveIds[3]}) EXECUTE FUNCTION ${name}()`);
+      const res = await submit();
+      expect(res).to.have.status(500);
+      expect(res.text).to.include('Could not save your fighter. Please try again.');
+      expect(res.text).not.to.include('forced HTTP save failure');
+      expect(res.text).to.include(fighterName);
+      expect(await db.one(counts)).to.deep.equal(before);
+      expect(await readdir(path.join(__dirname, '../images'))).to.deep.equal(filesBefore);
+    } finally {
+      await db.none(`DROP TRIGGER IF EXISTS ${name} ON moves_to_fighters`);
+      await db.none(`DROP FUNCTION ${name}()`);
+    }
   });
 
   it('requires login to view or submit the form', async () => {
