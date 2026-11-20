@@ -41,6 +41,9 @@ app.set('view engine', 'hbs');
 app.set('views', path.join(__dirname, 'views'));
 app.use(bodyParser.json()); // specify the usage of JSON for parsing request body.
 app.use(bodyParser.urlencoded({ extended: true }));
+if (process.env.NODE_ENV === 'production') {
+  app.set('trust proxy', 1);
+}
 app.use(session({
   name: 'battle.sid',
   secret: process.env.SESSION_SECRET || randomBytes(32).toString('hex'),
