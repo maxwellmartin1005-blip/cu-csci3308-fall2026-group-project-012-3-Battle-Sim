@@ -287,11 +287,23 @@ app.get('/battleResults', (req, res) => {
   });
 });
 
-app.get('/battle', async(req, res) => {
-  // Uncomment this line to get a fighter from database
-  // const userFighter = await getFighter(0, db)
-
-  res.render('pages/battle')
+app.get('/battle', requireLogin, async (req, res, next) => {
+  try {
+    const fighter = await getFighter(Number(req.query.fighterId) || 0, db);
+    const moves = fighter
+      ? await db.any(
+          `SELECT m.id, m.name, m.damage, m.type
+           FROM moves m
+           JOIN moves_to_fighters mf ON mf.move_id = m.id
+           WHERE mf.fighter_id = $1
+           ORDER BY m.id`,
+          [fighter.id]
+        )
+      : [];
+    res.render('pages/battle', { fighter, moves });
+  } catch (err) {
+    next(err);
+  }
 });
 
 module.exports = app;
