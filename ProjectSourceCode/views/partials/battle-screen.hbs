@@ -6,8 +6,12 @@
         <article class="battle-screen__fighter" aria-labelledby="battle-fighter-a">
             <p class="battle-screen__role">You</p>
             <h3 id="battle-fighter-a">{{#if fighter}}{{fighter.name}}{{else}}Fighter A{{/if}}</h3>
-            <div class="battle-screen__portrait" role="img" aria-label="Fighter A image placeholder">
+            <div class="battle-screen__portrait">
+            {{#if fighter.image}}
+                                <img src="{{fighter.image}}" alt="{{fighter.name}}" style="width:100%; height:100%; object-fit:contain;">
+                {{else}}
                 Image placeholder
+                {{/if}}
             </div>
             {{#if fighter}}
             <label class="battle-screen__health-label" for="battle-health-a">
