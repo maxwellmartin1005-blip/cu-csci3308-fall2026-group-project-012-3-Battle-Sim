@@ -54,9 +54,15 @@
             Preview only: these move buttons do not start a turn.
         </p>
         <div class="battle-screen__move-buttons">
+            {{#if moves.length}}
+            {{#each moves}}
+            <button type="button" data-move-id="{{this.id}}" data-damage="{{this.damage}}" data-type="{{this.type}}">{{this.name}}</button>
+            {{/each}}
+            {{else}}
             <button type="button">Quick hit</button>
             <button type="button">Heavy hit</button>
             <button type="button">Guard</button>
+            {{/if}}
         </div>
     </fieldset>
 </section>

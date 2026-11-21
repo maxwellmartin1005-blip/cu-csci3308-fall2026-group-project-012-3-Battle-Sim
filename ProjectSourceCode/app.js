@@ -290,7 +290,17 @@ app.get('/battleResults', (req, res) => {
 app.get('/battle', requireLogin, async (req, res, next) => {
   try {
     const fighter = await getFighter(Number(req.query.fighterId) || 0, db);
-    res.render('pages/battle', { fighter });
+    const moves = fighter
+      ? await db.any(
+          `SELECT m.id, m.name, m.damage, m.type
+           FROM moves m
+           JOIN moves_to_fighters mf ON mf.move_id = m.id
+           WHERE mf.fighter_id = $1
+           ORDER BY m.id`,
+          [fighter.id]
+        )
+      : [];
+    res.render('pages/battle', { fighter, moves });
   } catch (err) {
     next(err);
   }
